@@ -18,6 +18,8 @@
 	<!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
 	<link href="<?php echo base_url(); ?>assets/plugins/apex/apexcharts.css" rel="stylesheet" type="text/css">
 	<link href="<?php echo base_url(); ?>assets/assets/css/dashboard/dash_1.css" rel="stylesheet" type="text/css" class="dashboard-analytics" />
+	<link href="<?php echo base_url(); ?>assets/assets/css/dashboard/dash_2.css" rel="stylesheet" type="text/css" class="dashboard-sales" />
+
 	<!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
 
 </head>
