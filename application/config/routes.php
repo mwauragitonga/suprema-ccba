@@ -51,5 +51,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $route['default_controller'] = 'Main_controller';
 $route['dashboard'] = 'Main_controller/index';
+$route['apiLogin'] = 'Main_controller/apiLogin';
+$route['fetchEvents'] = 'Main_controller/fetchEvents';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
