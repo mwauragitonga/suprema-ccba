@@ -28,7 +28,7 @@
 
 									</div>
 									<div class="t-rate rate-dec">
-										<p><span class="badge outline-badge-success"><span>-$16.44</span> </span></p>
+										<p><span class="badge outline-badge-danger"><span>Access Denied</span> </span></p>
 									</div>
 								</div>
 							</div>
@@ -37,8 +37,8 @@
 								<div class="t-item">
 									<div class="t-company-name">
 										<div class="t-icon">
-											<div class="avatar avatar-xl">
-												<span class="avatar-title rounded-circle">SP</span>
+											<div class="icon">
+												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
 											</div>
 										</div>
 										<div class="t-name">
@@ -47,7 +47,7 @@
 										</div>
 									</div>
 									<div class="t-rate rate-inc">
-										<p><span>+$66.44</span> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-up"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg></p>
+										<p><span class="badge outline-badge-success"><span>Access Granted</span> </span></p>
 									</div>
 								</div>
 							</div>
@@ -56,8 +56,8 @@
 								<div class="t-item">
 									<div class="t-company-name">
 										<div class="t-icon">
-											<div class="avatar avatar-xl">
-												<span class="avatar-title rounded-circle">AD</span>
+											<div class="icon">
+												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
 											</div>
 										</div>
 										<div class="t-name">
@@ -67,7 +67,7 @@
 
 									</div>
 									<div class="t-rate rate-inc">
-										<p><span>+$66.44</span> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-up"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg></p>
+										<p><span class="badge outline-badge-success"><span>Access Granted</span> </span></p>
 									</div>
 								</div>
 							</div>
@@ -87,7 +87,7 @@
 
 									</div>
 									<div class="t-rate rate-dec">
-										<p><span>-$32.00</span> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg></p>
+										<p><span class="badge outline-badge-warning"><span>Invalid Fingerprint </span> </span></p>
 									</div>
 								</div>
 							</div>
@@ -221,9 +221,6 @@
 								</div>
 							</div>
 
-							<div class="tm-action-btn">
-								<button class="btn">View All <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
-							</div>
 						</div>
 					</div>
 				</div>
@@ -240,38 +237,33 @@
 							<div class="invoice-box">
 
 								<div class="acc-total-info">
-									<h5>Balance</h5>
-									<p class="acc-amount">$470</p>
+<!--									<h5>Schedule Report</h5>-->
+									<p class="acc-amount">Enter recipient details</p>
 								</div>
 
 								<div class="inv-detail">
 									<div class="info-detail-1">
-										<p>Monthly Plan</p>
-										<p>$ 199.0</p>
+										<p>Email</p>
+										<div class="form-group col-md-8">
+											<input type="email" class="form-control" id="email">
+										</div>
 									</div>
 									<div class="info-detail-2">
-										<p>Taxes</p>
-										<p>$ 17.82</p>
-									</div>
-									<div class="info-detail-3 info-sub">
-										<div class="info-detail">
-											<p>Extras this month</p>
-											<p>$ -0.68</p>
-										</div>
-										<div class="info-detail-sub">
-											<p>Netflix Yearly Subscription</p>
-											<p>$ 0</p>
-										</div>
-										<div class="info-detail-sub">
-											<p>Others</p>
-											<p>$ -0.68</p>
+										<p>Frequency</p>
+										<div class="form-group col-md-5" style="float: left">
+											<select id="inputState" class="form-control">
+												<option>Daily</option>
+												<option>Weekly</option>
+												<option>Monthly</option>
+											</select>
 										</div>
 									</div>
+
 								</div>
 
 								<div class="inv-action">
-									<a href="" class="btn btn-outline-dark">Summary</a>
-									<a href="" class="btn btn-danger">Transfer</a>
+									<a href="" class="btn  btn-outline-danger" >Reset</a>
+									<a href="" class="btn btn-success">Submit</a>
 								</div>
 							</div>
 						</div>
