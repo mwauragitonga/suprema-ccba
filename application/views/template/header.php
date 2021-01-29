@@ -27,6 +27,10 @@
 	<link href="<?php echo base_url(); ?>assets/plugins/flatpickr/custom-flatpickr.css" rel="stylesheet" type="text/css">
 	<link href="<?php echo base_url(); ?>assets/plugins/noUiSlider/custom-nouiSlider.css" rel="stylesheet" type="text/css">
 	<link href="<?php echo base_url(); ?>assets/plugins/bootstrap-range-Slider/bootstrap-slider.css" rel="stylesheet" type="text/css">
+
+	<style>
+		.table-bordered td, .table-bordered th { border: 1px solid #ebedf2; }
+	</style>
 	<!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
 
 </head>

@@ -141,6 +141,14 @@ class Main_controller extends CI_Controller
 return $data;
 	}
 
+	public function  email_report(){
+		echo "wamla,bez";
+		$email = $this->input->post("email");
+		$data = $this->input->post("data");
+		echo "Email:". $email ;
+		var_dump($data);
+	}
+
 	/**
 	 * @param $mail , address to receive email and attachment
 	 * @param $title , title of the email
@@ -199,7 +207,7 @@ return $data;
 		$dateTo = substr($date,  -10);
 		$mealTime = $this->input->post('mealTime');
 		$costcenter = $this->input->post('costcenter');
-		$limit = 40000;
+		$limit = 40;
 		$deviceID= 546845493;
 		$data	 = $this->fetchEvents($deviceID, $limit,  $dateFro, $dateTo, $mealTime, $costcenter);
 		$i=0;
@@ -216,8 +224,6 @@ return $data;
 		$array2 =  array();  // create a new array
 		$array2['contents']= $cleanarray; // add $cleanarray to the new array
 		$this->load->view('reports/viewReport', $array2); // pass the new array as the parameter
-
-	//	$this->load->view('reports/viewReport', $data[0]);
 	}
 
 	public function partner()
