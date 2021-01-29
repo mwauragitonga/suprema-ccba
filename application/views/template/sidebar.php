@@ -29,7 +29,7 @@
 						</div>
 					</div>
 				</a>
-				<div class="tooltip"><span>Settings</span></div>
+				<div class="tooltip"><span>Reports</span></div>
 			</li>
 
 
@@ -53,7 +53,7 @@
 	<div id="compact_submenuSidebar" class="submenu-sidebar">
 
 		<div class="theme-brand-name">
-			<a href="index.html">Suprema</a>
+			<a href="#">Suprema</a>
 		</div>
 
 		<div class="submenu" id="dashboard">
@@ -62,7 +62,8 @@
 
 			<ul class="submenu-list" data-parent-element="#dashboard">
 				<li class="active">
-					<a href="index.html"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-pie-chart"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg> Home </a>
+					<a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+									 class="feather feather-pie-chart"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg> Home </a>
 				</li>
 
 			</ul>
@@ -74,9 +75,9 @@
 			<ul class="submenu-list" data-parent-element="#app">
 
 				<li>
-					<a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+					<a href="<?php echo base_url(); ?>reports"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
 									 class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-							<polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> Reports Settings</a>
+							<polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> Generate Report</a>
 				</li>
 
 			</ul>

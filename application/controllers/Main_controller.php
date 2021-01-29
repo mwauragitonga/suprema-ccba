@@ -9,6 +9,7 @@ class Main_controller extends CI_Controller
 	 * Start Date : 27.01.2021
 	 * @author  Mwaura Gitonga
 	 *email: gitongakmwaura@gmail.com
+	 * U70XDN
 	 */
 	public function index()
 	{
@@ -41,6 +42,8 @@ class Main_controller extends CI_Controller
 		));
 
 		$response = curl_exec($curl);
+		//var_dump($response);
+
 		// Get bs-session-id from response header to authenticate other requests
 		$header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
 		$header = substr($response, 0, $header_size);
@@ -49,7 +52,6 @@ class Main_controller extends CI_Controller
 		$body = substr($response, $header_size);
 		curl_close($curl);
 		$sessionID = $head[0]["bs-session-id"];
-		//var_dump($sessionID);
 		return $sessionID ;
 
 	}
@@ -79,9 +81,10 @@ class Main_controller extends CI_Controller
 
 		return $headers;
 	}
-	public function fetchEvents($deviceID="", $limit="", $startDate="",$endDate=""){
+	public function fetchEvents($deviceID="", $limit="", $startDate="",$endDate="", $mealTime="", $costcenter=""){
 		//login and get session id
 		$sessionID= $this->apiLogin();
+		$data = array();
 	//	var_dump($sessionID);
 		if(!empty($sessionID)){
 			$curl = curl_init();
@@ -97,13 +100,13 @@ class Main_controller extends CI_Controller
 				CURLOPT_CUSTOMREQUEST => 'POST',
 				CURLOPT_POSTFIELDS => '{
     "Query": {
-        "limit": 1000,
+        "limit": '. $limit. ',
         "conditions": [
             {
                 "column": "device_id.id",
                 "operator" : 0,
                 "values": [
-                    "546845493"
+                    "'.$deviceID.'"
                 ]
             },
             {
@@ -132,20 +135,89 @@ class Main_controller extends CI_Controller
 			curl_close($curl);
 			$decodedData= json_decode( $response, true);
 			$rows = $decodedData['EventCollection']['rows'];
-			var_dump( $rows);
+			$data[]= ( $rows);
 		}
 
-
+return $data;
 	}
 
-	public function features()
+	/**
+	 * @param $mail , address to receive email and attachment
+	 * @param $title , title of the email
+	 * @param $mail_settings 'use this parameter to pass mail settings such as ssl, protocol,pass and user
+	 * @return bool
+	 */
+	public function email($mail = '', $title = '', $mail_settings = '')
 	{
-		$this->load->view('features');
+		//$mail_settings;
+		$from = 'info@callmetron.com';
+		$config['protocol'] = 'smtp';
+		$config['smtp_host'] = 'www.callmetron.com';
+		$config['smtp_port'] = '465';
+		$config['smtp_user'] = $from;
+		$config['smtp_pass'] = 'Tuende2020**';
+		$config['smtp_crypto'] = 'ssl';
+		$config['charset'] = 'iso-8859-1';
+		$config['wordwrap'] = TRUE;
+
+		$this->load->library('email');
+		$this->email->initialize($config);
+		$this->email->set_newline("\r\n");
+		$this->email->set_mailtype("html");
+		$this->email->from($from, 'CallMetron Reports');
+		$this->email->to($mail);
+		$this->email->subject($title);
+
+		$files = scandir(APPPATH . 'views/reports/pdf/generatedFiles', SCANDIR_SORT_DESCENDING);
+		$newest_file = $files[0];
+		$this->email->message('Generated Report on ' . $title);
+		$this->email->attach(APPPATH . 'views/reports/pdf/generatedFiles/' . $newest_file);
+		try {
+			if ($this->email->send()) {
+				echo 'Email sent';
+			} else {
+				echo 'Fail';
+			}
+			unlink(APPPATH . 'views/reports/pdf/generatedFiles/' . $newest_file);
+
+		} catch (Exception $e) {
+			return false;
+		}
 	}
 
-	public function contact()
+	public function reports()
 	{
-		$this->load->view('contact');
+		$this->load->view('reports/generateReport');
+	}
+
+	public function generate_report()
+	{
+
+		//collect input filters then fetch data from API
+		$date = $this->input->post('date');
+		$dateFro = substr($date, 0, 10);
+		$dateTo = substr($date,  -10);
+		$mealTime = $this->input->post('mealTime');
+		$costcenter = $this->input->post('costcenter');
+		$limit = 40000;
+		$deviceID= 546845493;
+		$data	 = $this->fetchEvents($deviceID, $limit,  $dateFro, $dateTo, $mealTime, $costcenter);
+		$i=0;
+		$cleanarray = array();
+		foreach ($data as $innerphrase) {
+			if (is_array($innerphrase)) {
+				foreach ($innerphrase as $value) {
+					$cleanarray[$i] = $value;
+					$i++;
+				}
+			}
+		}
+
+		$array2 =  array();  // create a new array
+		$array2['contents']= $cleanarray; // add $cleanarray to the new array
+		$this->load->view('reports/viewReport', $array2); // pass the new array as the parameter
+
+	//	$this->load->view('reports/viewReport', $data[0]);
 	}
 
 	public function partner()

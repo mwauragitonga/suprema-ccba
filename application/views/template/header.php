@@ -13,13 +13,20 @@
 	<link href="https://fonts.googleapis.com/css?family=Quicksand:400,500,600,700&display=swap" rel="stylesheet">
 	<link href="<?php echo base_url(); ?>assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 	<link href="<?php echo base_url(); ?>assets/assets/css/plugins.css" rel="stylesheet" type="text/css" />
+	<link href="<?php echo base_url(); ?>assets/plugins/flatpickr/flatpickr.css" rel="stylesheet" type="text/css">
+	<link href="<?php echo base_url(); ?>assets/plugins/noUiSlider/nouislider.min.css" rel="stylesheet" type="text/css">
 	<!-- END GLOBAL MANDATORY STYLES -->
 
 	<!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/plugins/table/datatable/datatables.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/plugins/table/datatable/dt-global_style.css">
 	<link href="<?php echo base_url(); ?>assets/plugins/apex/apexcharts.css" rel="stylesheet" type="text/css">
 	<link href="<?php echo base_url(); ?>assets/assets/css/dashboard/dash_1.css" rel="stylesheet" type="text/css" class="dashboard-analytics" />
 	<link href="<?php echo base_url(); ?>assets/assets/css/dashboard/dash_2.css" rel="stylesheet" type="text/css" class="dashboard-sales" />
-
+	<link href="<?php echo base_url(); ?>assets/assets/css/scrollspyNav.css" rel="stylesheet" type="text/css" />
+	<link href="<?php echo base_url(); ?>assets/plugins/flatpickr/custom-flatpickr.css" rel="stylesheet" type="text/css">
+	<link href="<?php echo base_url(); ?>assets/plugins/noUiSlider/custom-nouiSlider.css" rel="stylesheet" type="text/css">
+	<link href="<?php echo base_url(); ?>assets/plugins/bootstrap-range-Slider/bootstrap-slider.css" rel="stylesheet" type="text/css">
 	<!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
 
 </head>
