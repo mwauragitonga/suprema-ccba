@@ -55,6 +55,6 @@ $route['apiLogin'] = 'Main_controller/apiLogin';
 $route['fetchEvents'] = 'Main_controller/fetchEvents';
 $route['reports'] = 'Main_controller/reports';
 $route['generate_report'] = 'Main_controller/generate_report';
-$route['email_report'] = 'Main_controller/email_report';
+$route['email_report'] = 'Main_controller/prepareReport';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

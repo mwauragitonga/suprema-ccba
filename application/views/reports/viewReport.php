@@ -40,11 +40,24 @@
 					<tbody>
 					<?php
 					$count = 0;
+				//	var_dump($contents);
 					foreach ($contents as $user) { ?>
 						<tr>
 							<td><?php echo $count + 1 ?></td>
-							<td><b><?php echo $user['user_id']['user_id'] ?></b></td>
-							<td><?php echo $user['user_id']['name'] ?></td>
+							<td><b><?php
+									if(isset($user['user_id']['user_id'] )){
+										echo $user['user_id']['user_id'];
+									}else{
+										echo "No User ID";
+									}
+								 ?></b></td>
+							<td><?php
+								if(isset($user['user_id']['name'] )){
+									echo $user['user_id']['name'];
+									}else{
+									echo "No Username";
+								}
+								?></td>
 							<td><?php echo $user['device_id']['name'] ?></td>
 							<td><b><?php echo $user['user_group_id']['id'] ?></b></td>
 							<td><?php echo $user['user_group_id']['name'] ?></td>

@@ -1,4 +1,8 @@
 <?php
+
+use Mpdf\Mpdf;
+use Mpdf\MpdfException;
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class Main_controller extends CI_Controller
@@ -114,7 +118,7 @@ class Main_controller extends CI_Controller
                 "operator": 3,
                 "values": [
                     "2021-01-01T00:00:00.000Z",
-                    "2021-01-26T00:00:00.000Z"
+                    "2021-01-30T00:00:00.000Z"
                 ]
             }
         ],
@@ -142,18 +146,61 @@ return $data;
 	}
 
 	public function  email_report(){
-		echo "wamlambez";
+
+
+	}
+	public function prepareReport(){
+		/*	prepare data for email title and body
+			1.email address
+			2.title(Event logs for day x to y )
+			3.Body
+			4.attachment(s)
+		*/
 		$email = $this->input->post("email");
 		$dataJson = $this->input->post('data');
 		$dataArray = json_decode(htmlspecialchars_decode($dataJson), true);
-	/*	prepare data for email title and body
-		1.email address
-		2.title(Event logs for day x to y )
-		3.Body
-		4.attachment(s)
-	*/
+
+		$data[]= ( $dataArray);
+		$i=0;
+		$cleanarray = array();
+		foreach ($data as $innerphrase) {
+			if (is_array($innerphrase)) {
+				foreach ($innerphrase as $value) {
+					$cleanarray[$i] = $value;
+					$i++;
+				}
+			}
+		}
+
+		$array2 =  array();  // create a new array
+		$array2['contents']= $cleanarray; // add $cleanarray to the new array
 
 
+		$mpdf = new Mpdf(array('tempDir' => APPPATH . '/views/reports/pdf/temp'));
+		try {
+			$mpdf = new \Mpdf\Mpdf();
+			$html = $this->load->view('reports/pdf/template', $array2);// pass the new array as the parameter
+			$string_version = serialize($html);
+			$mpdf->WriteHTML($string_version);
+			$time = date('ymdhis');
+			ob_clean();
+		//	header('Content-Type: application/pdf');
+			error_reporting(E_ERROR | E_PARSE);
+			$mpdf->Output(APPPATH . 'views/reports/pdf/generatedFiles/' . $time . '.pdf', 'D');
+		} catch (MpdfException $e) {
+			echo $e->getMessage();
+		}
+
+		//email'
+		try {
+			$this->email($email, "Email Subject");
+		} catch (Exception $exception) {
+			//echo "error sending email";
+		}
+		$result = array('
+			status' => 'true'
+		);
+		//var_dump($result);
 	}
 
 	/**
@@ -165,21 +212,21 @@ return $data;
 	public function email($mail = '', $title = '', $mail_settings = '')
 	{
 		//$mail_settings;
-		$from = 'info@callmetron.com';
 		$config['protocol'] = 'smtp';
-		$config['smtp_host'] = 'www.callmetron.com';
+		$config['smtp_host'] = 'smtp.gmail.com';
 		$config['smtp_port'] = '465';
-		$config['smtp_user'] = $from;
-		$config['smtp_pass'] = 'Tuende2020**';
+		$config['smtp_user'] = 'carreltechlimited@gmail.com';
+		$config['smtp_pass'] = 'Carrel@123';
 		$config['smtp_crypto'] = 'ssl';
 		$config['charset'] = 'iso-8859-1';
 		$config['wordwrap'] = TRUE;
+		$config['auth'] = TRUE;
 
 		$this->load->library('email');
 		$this->email->initialize($config);
 		$this->email->set_newline("\r\n");
 		$this->email->set_mailtype("html");
-		$this->email->from($from, 'CallMetron Reports');
+		$this->email->from('carreltechlimited@gmail.com', 'Suprema API Reports');
 		$this->email->to($mail);
 		$this->email->subject($title);
 
@@ -189,9 +236,9 @@ return $data;
 		$this->email->attach(APPPATH . 'views/reports/pdf/generatedFiles/' . $newest_file);
 		try {
 			if ($this->email->send()) {
-				echo 'Email sent';
+				//echo 'Email sent';
 			} else {
-				echo 'Fail';
+			//	echo 'Email not Sent';
 			}
 			unlink(APPPATH . 'views/reports/pdf/generatedFiles/' . $newest_file);
 

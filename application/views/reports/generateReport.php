@@ -23,7 +23,7 @@
 										</div>
 									</div>
 									<div class="widget-content widget-content-area">
-										<form  method="post" action="<?php echo base_url() ?>generate_report">>
+										<form  method="post" action="<?php echo base_url() ?>generate_report">
 											<div class="form-row mb-4">
 												<div class="form-group col-md-6">
 
@@ -75,14 +75,14 @@
 												<div class="form-group col-md-2">
 
 												</div>
-												<div class="form-group col-md-6">
-													<div class="custom-control custom-checkbox checkbox-info">
-														<input type="checkbox" class="custom-control-input" id="gridCheck" name="check">
-														<label class="custom-control-label" for="gridCheck"></label>
-													</div>
-													<label for="inputCity">Email</label>
-													<input type="text" class="form-control" id="email" name="email">
-												</div>
+<!--												<div class="form-group col-md-6">-->
+<!--													<div class="custom-control custom-checkbox checkbox-info">-->
+<!--														<input type="checkbox" class="custom-control-input" id="gridCheck" name="check">-->
+<!--														<label class="custom-control-label" for="gridCheck"></label>-->
+<!--													</div>-->
+<!--													<label for="inputCity">Email</label>-->
+<!--													<input type="text" class="form-control" id="email" name="email">-->
+<!--												</div>-->
 
 											</div>
 											<div class="form-row mb-4">
