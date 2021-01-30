@@ -2,14 +2,14 @@
 <!--  BEGIN CONTENT AREA  -->
 <div id="content" class="main-content">
 	<div class="layout-px-spacing">
-		<form method="post" action="<?php echo base_url() ?>generate_report">
+		<form method="post" action="<?php echo base_url() ?>email_report">
 
 			<div class="row layout-top-spacing" id="cancel-row">
 				<div class="form-row col-9 mb-4">
 					<div class="form-group col-md-9">
 						<input type="text" class="form-control col-6" id="email" name="email"
 							   placeholder="Enter recipient's email" required>
-						<input type="text" class="form-control col-6" id="data" name="data" value="<?php echo json_encode($contents)  ?>" hidden>
+						<input type="text" class="form-control col-6" id="data" name="data" value="<?php echo htmlspecialchars(json_encode($contents));?>" hidden>
 
 						<button type="submit" class="btn btn-primary col-3 ">Email Report</button>
 

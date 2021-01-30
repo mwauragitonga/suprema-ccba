@@ -142,11 +142,18 @@ return $data;
 	}
 
 	public function  email_report(){
-		echo "wamla,bez";
+		echo "wamlambez";
 		$email = $this->input->post("email");
-		$data = $this->input->post("data");
-		echo "Email:". $email ;
-		var_dump($data);
+		$dataJson = $this->input->post('data');
+		$dataArray = json_decode(htmlspecialchars_decode($dataJson), true);
+	/*	prepare data for email title and body
+		1.email address
+		2.title(Event logs for day x to y )
+		3.Body
+		4.attachment(s)
+	*/
+
+
 	}
 
 	/**
