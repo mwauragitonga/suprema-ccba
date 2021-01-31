@@ -25,7 +25,8 @@ class Main_controller extends CI_Controller
 		$curl = curl_init();
 
 		curl_setopt_array($curl, array(
-			CURLOPT_URL => 'https://ccba.biostar2.com/api/login',
+			//CURLOPT_URL => 'https://ccba.biostar2.com/api/login',
+			CURLOPT_URL => 'https://nairobigarage.biostar2.com/api/login',
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_ENCODING => '',
 			CURLOPT_MAXREDIRS => 10,
@@ -35,9 +36,9 @@ class Main_controller extends CI_Controller
 			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 			CURLOPT_CUSTOMREQUEST => 'POST',
 			CURLOPT_POSTFIELDS => '{
-  "User": {
+ "User": {
     "login_id": "admin",
-    "password": "CCb@B10$tar"
+    "password": "Company1."
   }
 }',
 			CURLOPT_HTTPHEADER => array(
@@ -94,7 +95,10 @@ class Main_controller extends CI_Controller
 			$curl = curl_init();
 
 			curl_setopt_array($curl, array(
-				CURLOPT_URL => 'https://ccba.biostar2.com/api/events/search',
+				CURLOPT_URL => 'https://nairobigarage.biostar2.com/api/events/search',
+			//	CURLOPT_URL => 'https://ccba.biostar2.com/api/events/search',
+
+				CURLOPT_SSL_VERIFYPEER => false,
 				CURLOPT_RETURNTRANSFER => true,
 				CURLOPT_ENCODING => '',
 				CURLOPT_MAXREDIRS => 10,
@@ -157,6 +161,8 @@ return $data;
 			4.attachment(s)
 		*/
 		$email = $this->input->post("email");
+		$startDate = $this->input->post("startDate");
+		$endDate = $this->input->post("endDate");
 		$dataJson = $this->input->post('data');
 		$dataArray = json_decode(htmlspecialchars_decode($dataJson), true);
 
@@ -175,17 +181,24 @@ return $data;
 		$array2 =  array();  // create a new array
 		$array2['contents']= $cleanarray; // add $cleanarray to the new array
 
+		$arrayData = array(
+			'contents'=> $array2,
+			'startDate'=> $startDate,
+			'endDate'=> $endDate
+		);
 
 		$mpdf = new Mpdf(array('tempDir' => APPPATH . '/views/reports/pdf/temp'));
 		try {
 			$mpdf = new \Mpdf\Mpdf();
-			$html = $this->load->view('reports/pdf/template', $array2);// pass the new array as the parameter
+			$mpdf->debug = false;
+			$html = $this->load->view('reports/pdf/template', $arrayData);// pass the new array as the parameter
 			$string_version = serialize($html);
+			$mpdf->charset_in = 'utf-8';
 			$mpdf->WriteHTML($string_version);
 			$time = date('ymdhis');
 			ob_clean();
 		//	header('Content-Type: application/pdf');
-			error_reporting(E_ERROR | E_PARSE);
+			error_reporting(0);
 			$mpdf->Output(APPPATH . 'views/reports/pdf/generatedFiles/' . $time . '.pdf', 'D');
 		} catch (MpdfException $e) {
 			echo $e->getMessage();
@@ -240,7 +253,7 @@ return $data;
 			} else {
 			//	echo 'Email not Sent';
 			}
-			unlink(APPPATH . 'views/reports/pdf/generatedFiles/' . $newest_file);
+		//	unlink(APPPATH . 'views/reports/pdf/generatedFiles/' . $newest_file);
 
 		} catch (Exception $e) {
 			return false;
@@ -259,10 +272,13 @@ return $data;
 		$date = $this->input->post('date');
 		$dateFro = substr($date, 0, 10);
 		$dateTo = substr($date,  -10);
+		//var_dump($dateTo);
+
 		$mealTime = $this->input->post('mealTime');
 		$costcenter = $this->input->post('costcenter');
 		$limit = 40;
-		$deviceID= 546845493;
+//		$deviceID= 546845493;/*CCBA*/
+		$deviceID= 545406683;/*Nairobi Garage*/
 		$data	 = $this->fetchEvents($deviceID, $limit,  $dateFro, $dateTo, $mealTime, $costcenter);
 		$i=0;
 		$cleanarray = array();
@@ -277,13 +293,15 @@ return $data;
 
 		$array2 =  array();  // create a new array
 		$array2['contents']= $cleanarray; // add $cleanarray to the new array
-		$this->load->view('reports/viewReport', $array2); // pass the new array as the parameter
+		$arrayData = array(
+			'contents'=> $array2,
+			'startDate'=> $dateFro,
+			'endDate'=> $dateTo
+		);
+//		var_dump($arrayData);
+		$this->load->view('reports/viewReport', $arrayData); // pass the new array as the parameter
 	}
 
-	public function partner()
-	{
-		$this->load->view('partners');
-	}
 
 	public function sendContactMail()
 	{
@@ -339,57 +357,6 @@ return $data;
 		}
 	}
 
-	public function sendPartnerMail()
-	{
 
-		$to = 'info@callmetron.com';
-		$from = 'contact@callmetron.com';
-		$name = $this->input->post("name");
-		$email = $this->input->post("email");
-		$country = $this->input->post("country");
-		$subject = 'PARTNERSHIP';
-
-		$config['protocol'] = 'smtp';
-		$config['smtp_host'] = 'www.callmetron.com';
-		$config['smtp_port'] = '465';
-		$config['smtp_user'] = $from;
-		$config['smtp_pass'] = 'Tuende2020**';
-		$config['smtp_crypto'] = 'ssl';
-		$config['charset'] = 'iso-8859-1';
-		$config['wordwrap'] = TRUE;
-		$headers = 'MIME-Version: 1.0' . "\r\n";
-		//$headers .= "From: " . $email . "\r\n"; // Sender's E-mail
-		$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-		$this->load->library('email');
-		$this->email->initialize($config);
-		$this->email->set_newline("\r\n");
-		$this->email->set_mailtype("html");
-		$this->email->from($email);
-		$this->email->to($to);
-		$this->email->subject($subject);
-		$this->email->message('<table style="width:100%">
-        <tr><td>User Name: ' . $name . '</td></tr>
-        <tr><td>User Email: ' . $email . '</td></tr>
-        <tr><td>Subject: ' . $subject . '</td></tr>        
-         <tr><td>Country: ' . $country . '</td></tr>        
-
-    		</table>');
-
-
-		try {
-			$this->email->send();
-			$message = 'Email Sent, We will be in touch ASAP.';
-			$data = array(
-				'message' => $message
-			);
-			$this->load->view('partners.php', $data);
-		} catch (Exception $e) {
-			$message = 'Email not sent! Please try again.';
-			$data = array(
-				'message' => $message
-			);
-			$this->load->view('partners.php', $data);
-		}
-	}
 
 }

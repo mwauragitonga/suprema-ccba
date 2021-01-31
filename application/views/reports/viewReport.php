@@ -9,7 +9,12 @@
 					<div class="form-group col-md-9">
 						<input type="text" class="form-control col-6" id="email" name="email"
 							   placeholder="Enter recipient's email" required>
-						<input type="text" class="form-control col-6" id="data" name="data" value="<?php echo htmlspecialchars(json_encode($contents));?>" hidden>
+						<input type="text" class="form-control col-6" id="data" name="data"
+							   value="<?php echo htmlspecialchars(json_encode($contents));?>" hidden>
+<input type="text" class="form-control col-6" id="startDate" name="startDate"
+							   value="<?php echo $startDate;?>" hidden>
+<input type="text" class="form-control col-6" id="endDate" name="endDate"
+							   value="<?php echo $endDate;?>" hidden>
 
 						<button type="submit" class="btn btn-primary col-3 ">Email Report</button>
 
@@ -22,10 +27,12 @@
 
 	<div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
 		<div class="widget-content widget-content-area ">
+			<img src="<?php echo base_url(); ?>assets/assets/img/logo.png" class="img-fluid mr-2" alt="avatar"style="float: right">
+
 			<div class="table-responsive mb-4 mt-4">
 				<table id="zero-config" class="table table-hover" style="width:100%">
 					<thead>
-					<h5 style="margin-left: 40%"><b> Event Log Report </b></h5>
+					<h5 style="margin-left: 20%">Event Log Report Between <b>  <?php echo $startDate ;?> and   <?php echo $endDate ;?></b></h5>
 					<tr>
 						<th>#</th>
 						<th>User ID</th>
@@ -41,7 +48,7 @@
 					<?php
 					$count = 0;
 				//	var_dump($contents);
-					foreach ($contents as $user) { ?>
+					foreach ($contents['contents'] as $user) { ?>
 						<tr>
 							<td><?php echo $count + 1 ?></td>
 							<td><b><?php
