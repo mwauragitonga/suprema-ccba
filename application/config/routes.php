@@ -53,6 +53,7 @@ $route['default_controller'] = 'Main_controller';
 $route['dashboard'] = 'Main_controller/index';
 $route['apiLogin'] = 'Main_controller/apiLogin';
 $route['fetchEvents'] = 'Main_controller/fetchEvents';
+$route['fetchUserInfo'] = 'Main_controller/fetchUserInfo';
 $route['reports'] = 'Main_controller/reports';
 $route['generate_report'] = 'Main_controller/generate_report';
 $route['email_report'] = 'Main_controller/prepareReport';

@@ -25,8 +25,8 @@ class Main_controller extends CI_Controller
 		$curl = curl_init();
 
 		curl_setopt_array($curl, array(
-			//CURLOPT_URL => 'https://ccba.biostar2.com/api/login',
-			CURLOPT_URL => 'https://nairobigarage.biostar2.com/api/login',
+			CURLOPT_URL => 'https://ccba.biostar2.com/api/login',/*CCBA*/
+			//CURLOPT_URL => 'https://nairobigarage.biostar2.com/api/login',/*Nairobi Garage*/
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_ENCODING => '',
 			CURLOPT_MAXREDIRS => 10,
@@ -38,7 +38,8 @@ class Main_controller extends CI_Controller
 			CURLOPT_POSTFIELDS => '{
  "User": {
     "login_id": "admin",
-    "password": "Company1."
+    "password": "CCb@B10$tar"
+   
   }
 }',
 			CURLOPT_HTTPHEADER => array(
@@ -90,13 +91,12 @@ class Main_controller extends CI_Controller
 		//login and get session id
 		$sessionID= $this->apiLogin();
 		$data = array();
-	//	var_dump($sessionID);
 		if(!empty($sessionID)){
 			$curl = curl_init();
 
 			curl_setopt_array($curl, array(
-				CURLOPT_URL => 'https://nairobigarage.biostar2.com/api/events/search',
-			//	CURLOPT_URL => 'https://ccba.biostar2.com/api/events/search',
+			//	CURLOPT_URL => 'https://nairobigarage.biostar2.com/api/events/search',/*Nairobi Garage*/
+				CURLOPT_URL => 'https://ccba.biostar2.com/api/events/search',/*CCBA*/
 
 				CURLOPT_SSL_VERIFYPEER => false,
 				CURLOPT_RETURNTRANSFER => true,
@@ -116,20 +116,27 @@ class Main_controller extends CI_Controller
                 "values": [
                     "'.$deviceID.'"
                 ]
+            },  {
+                "column": "event_type_id.code",
+                "operator" : 0,
+                "values": [
+                    "4865"
+                ]
             },
+            
             {
                 "column": "datetime",
                 "operator": 3,
                 "values": [
                     "2021-01-01T00:00:00.000Z",
-                    "2021-01-30T00:00:00.000Z"
+                    "2021-01-31T00:00:00.000Z"
                 ]
             }
         ],
         "orders": [
             {
                 "column": "datetime",
-                "descending": true
+                "ascending": true
             }
         ]
     }
@@ -148,7 +155,82 @@ class Main_controller extends CI_Controller
 
 return $data;
 	}
+	public function fetchUserInfo($userID=""){
+		//login and get session id
+		$sessionID= $this->apiLogin();
 
+		$curl = curl_init();
+		//$userID=51830;
+		curl_setopt_array($curl, array(
+			CURLOPT_URL => 'https://ccba.biostar2.com/api/users/'.$userID,
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => '',
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 0,
+			CURLOPT_FOLLOWLOCATION => true,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => 'GET',
+			CURLOPT_HTTPHEADER => array(
+				'bs-session-id: '. $sessionID,
+			),
+		));
+
+		$response = curl_exec($curl);
+
+		curl_close($curl);
+		$decodedData= json_decode( $response, true);
+		$data[]= ( $decodedData);
+		$i=0;
+		$cleanarray = array();
+		foreach ($data as $innerphrase) {
+			if (is_array($innerphrase)) {
+				foreach ($innerphrase as $value) {
+					$cleanarray[$i] = $value;
+					$i++;
+				}
+			}
+		}
+
+		$array2 =  array();  // create a new array
+		$array2['contents']= $cleanarray; // add $cleanarray to the new array
+		//$data = ($array2['contents']);
+		$costCentreName ='';
+		$costCentreCode ='';
+		$size= sizeof($array2['contents'][0]['user_custom_fields']);
+		if($size == 5){
+			if(!empty($array2['contents'][0]['user_custom_fields'][1]['item'])){
+			$costCentreName= $array2['contents'][0]['user_custom_fields'][1]['item'];
+		}else{
+			$costCentreName ='No Cost Center Nam';
+		}
+
+			if(!empty($array2['contents'][0]['user_custom_fields'][2]['custom_field'])){
+
+				$costCentreCode= $array2['contents'][0]['user_custom_fields'][2]['custom_field']['id'];
+			}else{
+				$costCentreCode ='No Cost Center Code';
+			}
+
+			$userInfo = array(
+				'userID'=>$array2['contents'][0]['user_id'],
+				'username' => $array2['contents'][0]['name'],
+				'costCenterCode'=>$costCentreCode,
+				'costCenterName'=>$costCentreName
+			);
+		}else{
+	//		var_dump($array2['contents'][0]['user_custom_fields']);
+
+			$userInfo = array(
+				'userID'=>$array2['contents'][0]['user_id'],
+				'username' => $array2['contents'][0]['name'],
+				'costCenterCode'=>$array2['contents'][0]['user_custom_fields'][1]['item'],
+				'costCenterName'=>"No  Cost Center Name"
+			);
+		}
+
+		return ( $userInfo);
+
+	}
 	public function  email_report(){
 
 
@@ -186,12 +268,11 @@ return $data;
 			'startDate'=> $startDate,
 			'endDate'=> $endDate
 		);
-
 		$mpdf = new Mpdf(array('tempDir' => APPPATH . '/views/reports/pdf/temp'));
 		try {
 			$mpdf = new \Mpdf\Mpdf();
 			$mpdf->debug = false;
-			$html = $this->load->view('reports/pdf/template', $arrayData);// pass the new array as the parameter
+			$html = $this->load->view('reports/pdf/templateOne', $arrayData);// pass the new array as the parameter
 			$string_version = serialize($html);
 			$mpdf->charset_in = 'utf-8';
 			$mpdf->WriteHTML($string_version);
@@ -199,7 +280,7 @@ return $data;
 			ob_clean();
 		//	header('Content-Type: application/pdf');
 			error_reporting(0);
-			$mpdf->Output(APPPATH . 'views/reports/pdf/generatedFiles/' . $time . '.pdf', 'D');
+			$mpdf->Output('Events Log Report' . $time . '.pdf', 'D');
 		} catch (MpdfException $e) {
 			echo $e->getMessage();
 		}
@@ -272,34 +353,40 @@ return $data;
 		$date = $this->input->post('date');
 		$dateFro = substr($date, 0, 10);
 		$dateTo = substr($date,  -10);
-		//var_dump($dateTo);
 
 		$mealTime = $this->input->post('mealTime');
 		$costcenter = $this->input->post('costcenter');
-		$limit = 40;
-//		$deviceID= 546845493;/*CCBA*/
-		$deviceID= 545406683;/*Nairobi Garage*/
-		$data	 = $this->fetchEvents($deviceID, $limit,  $dateFro, $dateTo, $mealTime, $costcenter);
-		$i=0;
-		$cleanarray = array();
-		foreach ($data as $innerphrase) {
-			if (is_array($innerphrase)) {
-				foreach ($innerphrase as $value) {
-					$cleanarray[$i] = $value;
-					$i++;
-				}
-			}
+		$limit = 100;
+		$deviceID= 546845493;/*CCBA*/
+//		$deviceID= 545406683;/*Nairobi Garage*/
+		$data = $this->fetchEvents($deviceID, $limit,  $dateFro, $dateTo, $mealTime, $costcenter);
+		$count =0;
+		$fullData = [];
+		$summary =[];
+		for ($x= 0 ; $x< (sizeof($data[0])); $x ++){
+			$billingInfo = $this->fetchUserInfo($data[0][$x]['user_id']['user_id']);
+
+			$fullData[] =  array(
+				'user_id'=> $data[0][$x]['user_id']['user_id'],
+				'username'=> $data[0][$x]['user_id']['name'],
+				'device_id'=> $data[0][$x]['device_id'],
+				'user_group_id' => $data[0][$x]['user_group_id']['id'],
+				'user_group_name' => $data[0][$x]['user_group_id']['name'],
+				'event_type' => $data[0][$x]['event_type_id']['code'],
+				'datetime' => $data[0][$x]['datetime'],
+				'costCenterCode' => $billingInfo['costCenterCode'],
+				'costCenterName' => $billingInfo['costCenterName'],
+
+			);
 		}
 
-		$array2 =  array();  // create a new array
-		$array2['contents']= $cleanarray; // add $cleanarray to the new array
 		$arrayData = array(
-			'contents'=> $array2,
+			'data'=> $fullData,
 			'startDate'=> $dateFro,
-			'endDate'=> $dateTo
+			'endDate'=> $dateTo,
+			'total_events' => sizeof($data[0])
 		);
-//		var_dump($arrayData);
-		$this->load->view('reports/viewReport', $arrayData); // pass the new array as the parameter
+			$this->load->view('reports/viewReport', $arrayData); // pass the new array as the parameter
 	}
 
 

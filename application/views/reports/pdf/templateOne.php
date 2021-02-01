@@ -67,11 +67,13 @@
 	}
 
 	.reportImage{
-		float: left;
+		float: right;
+		width: 100%;
 	}
 
 	.reportImage img{
-		float: left;
+		float: right;
+		list-style-image: url('https://www.ccbagroup.com/wp-content/themes/CSI/style/images/logo.png');
 	}
 
 	.reportDetails{
@@ -86,17 +88,32 @@
 </style>
 <div class="details">
 	<div class="details-body">
-<!--		<div class="reportImage">-->
-<!--			<img src="--><?php //echo base_url('profile_pictures/'.$user_details->prof_img); ?><!--"  height="120px" width="110px" alt="">-->
-<!--			<p><small>--><?php //echo "Printed on " . date("d/m/Y") . "<br>"; ?><!--</small></p>-->
-<!--		</div>-->
-<!--		<div class="reportDetails">-->
-<!--			<p>Student Name: --><?php //echo $user_details->fname.' '.$user_details->lname ?><!--</p>-->
-<!--			<p>School: --><?php //echo $user_details->name ?><!--</p>-->
-<!--			<p>Level: --><?php //echo $user_details->level_name ?><!--</p>-->
+		<div class="reportImage" >
+			<img  height="120px" width="310px" alt=""><br>
+
+		</div>
+		<div class="reportDetails">
+			<?php
+			$count = 0;
+			$sums = array();
+			foreach($contents['contents'][0] as $vv){
+				$v = $vv["costCenterCode"];
+				if(!array_key_exists($v,$sums)){
+					$sums[$v] = 0;
+				}
+				$sums[$v]++;
+			}
+			?>
+			<h4 style="margin-left: 5%"><b>Report Summary</b></h4>
+			<ul>
+				<?php
+				foreach($sums as $key=>$value){ ?>
+					<li>	<p>Cost Center<b> <?php  echo $key?> </b> served <b><?php  echo $value?></b> meals</p></li>
+					<?php
+				} ?>
 		</div>
 	</div>
-</div>
+</div></div>
 
 
 
@@ -108,10 +125,13 @@
 				<table id="zero-config" class="table table-hover" style="width:100%">
 					<thead>
 					<h5 style="margin-left: 40%"><b> Event Log Report </b></h5>
+<!--					<p><small>--><?php //echo "Printed on " . date("d/m/Y") . "<br>"; ?><!--</small></p><br>-->
 					<tr>
 						<th>#</th>
 						<th>User ID</th>
 						<th>Name</th>
+						<th>Cost Center Code</th>
+						<th>Cost Center Name</th>
 						<th>Device</th>
 						<th>Group ID</th>
 						<th>User Group</th>
@@ -122,28 +142,35 @@
 					<tbody>
 					<?php
 					$count = 0;
-					//	var_dump($contents['contents']);
-					foreach ($contents['contents'][0] as $user) { ?>
+					foreach ($contents['contents'][0] as $user) {
+
+						?>
 						<tr>
 							<td><?php echo $count + 1 ?></td>
 							<td><b><?php
-									if(isset($user['user_id']['user_id'] )){
-										echo $user['user_id']['user_id'];
+									if(isset($user['user_id'] )){
+										echo $user['user_id'];
 									}else{
 										echo "No User ID";
 									}
 									?></b></td>
 							<td><?php
-								if(isset($user['user_id']['name'] )){
-									echo $user['user_id']['name'];
+								if(isset($user['username'] )){
+									echo $user['username'];
 								}else{
 									echo "No Username";
 								}
 								?></td>
+							<td><?php echo $user['costCenterCode'] ?></td>
+							<td><?php echo $user['costCenterName'] ?></td>
 							<td><?php echo $user['device_id']['name'] ?></td>
-							<td><b><?php echo $user['user_group_id']['id'] ?></b></td>
-							<td><?php echo $user['user_group_id']['name'] ?></td>
-							<td><b><?php echo $user['event_type_id']['code'] ?></b></td>
+							<td><b><?php echo $user['user_group_id']?></b></td>
+							<td><?php echo $user['user_group_name'] ?></td>
+							<td><b><?php
+									if( $user['event_type'] == 4865) {
+										echo strtoupper("Fingerprint Identification Successful");
+									}?>
+								</b></td>
 							<td><b><?php echo $user['datetime'] ?></b></td>
 
 						</tr>
@@ -167,8 +194,11 @@
 </div>
 
 <div class="footer">
-	<div class="footer-inner"> <?php echo date('Y'); ?> &copy; Dawati.
-		<a href="https://www.dawati.co.ke" title="Dawati" target="_blank">www.dawati.co.ke</a>
+
+	<div class="footer-inner"> <?php echo date('Y'); ?> &copy; U70XDN.
+		<p class="">Powered By Naya Solutions	</p>
+<!--		<img src="--><?php //echo base_url(); ?><!--assets/assets/img/nayalogo.png" class="img-fluid mr-2" alt="avatar" style="float: right">-->
+
 	</div>
 </div>
 </body>
