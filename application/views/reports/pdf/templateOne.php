@@ -73,7 +73,6 @@
 
 	.reportImage img{
 		float: right;
-		list-style-image: url('https://www.ccbagroup.com/wp-content/themes/CSI/style/images/logo.png');
 	}
 
 	.reportDetails{
@@ -88,10 +87,11 @@
 </style>
 <div class="details">
 	<div class="details-body">
-		<div class="reportImage" >
-			<img  height="120px" width="310px" alt=""><br>
-
+		<div class="reportImage" style="float:right" >
+			<img  src="https://www.ccbagroup.com/wp-content/themes/CSI/style/images/logo.png'" height="83px" width="370px" alt=""><br>
 		</div>
+		<p style="float:right"><b><?php echo "Report Generated on " . date("d/m/Y") . "<br>"; ?></b></p><br>
+
 		<div class="reportDetails">
 			<?php
 			$count = 0;
@@ -104,16 +104,64 @@
 				$sums[$v]++;
 			}
 			?>
-			<h4 style="margin-left: 5%"><b>Report Summary</b></h4>
+			<h4 style="margin-left: 35%"><b>Report Summary</b></h4>
 			<ul>
 				<?php
-				foreach($sums as $key=>$value){ ?>
-					<li>	<p>Cost Center<b> <?php  echo $key?> </b> served <b><?php  echo $value?></b> meals</p></li>
+				foreach ($sums as $key => $value) {
+				$breakfastCounter = 0;
+				$lunchCounter = 0;
+				$dinnerCounter = 0;
+				$lateNightCounter = 0;
+				$outsideHours =0;
+
+				foreach ($contents['contents'][0] as $user) {
+
+					if ($user["costCenterCode"] == $key) {
+						$hour = substr($user['datetime'], -12, 2);
+						if ($hour >= 8 && $hour <= 10) {
+							$breakfastCounter++;
+						} elseif ($hour >= 11 && $hour <= 15) {
+							$lunchCounter++;
+						} elseif ($hour >= 20 && $hour <= 23) {
+							$dinnerCounter++;
+						} elseif ($hour >= 2 && $hour <= 4) {
+							$lateNightCounter++;
+						} else {
+							$outsideHours++;
+						}
+					}
+				}
+				?>
+			<?php 	$i = 0; ?>
+				<style>
+					ul li {
+						float:left;
+					}
+					ul li.break {
+						clear: right;
+						display: inline-block;
+						width: 33%;
+						margin: 10px 0;
+					}
+				</style>
+				<li <?php if ( $i % 3 == 0 ) echo ' class="break"' ?> ><p>Cost Center<b> <?php echo $key ?> </b> served <b><?php echo $value ?></b> meals</p>
 					<?php
-				} ?>
+					echo "<b>Breakfast:- </b> ". $breakfastCounter ." Meals<br>";
+					echo "<b>Lunch:-</b> ". $lunchCounter ." Meals<br>";
+					echo "<b>Dinner:- </b> ". $dinnerCounter ." Meals<br>";
+					echo "<b>Late Night:- </b> ". $lateNightCounter ." Meals<br>";
+					echo "<b>Outside Hours:- </b>  ". $outsideHours ." Meals<br>";
+					//	echo "<b>Total Meals Served </b>  ". $breakfastCounter + $lunchCounter+ $dinnerCounter + $outsideHours ."<br>";
+
+					}?></li>
+				<br>
+				<br> <br>
+				<?php
+				$i++; ?></ul>
+
 		</div>
 	</div>
-</div></div>
+</div>
 
 
 
@@ -124,8 +172,7 @@
 			<div class="table-responsive mb-4 mt-4">
 				<table id="zero-config" class="table table-hover" style="width:100%">
 					<thead>
-					<h5 style="margin-left: 40%"><b> Event Log Report </b></h5>
-<!--					<p><small>--><?php //echo "Printed on " . date("d/m/Y") . "<br>"; ?><!--</small></p><br>-->
+					<h5 style="margin-left: 30%">Event Log Report Between <b>  <?php echo $startDate ;?> and   <?php echo $endDate ;?></b></h5>
 					<tr>
 						<th>#</th>
 						<th>User ID</th>

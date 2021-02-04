@@ -6,17 +6,16 @@
 			<?php
 			$count = 0;
 			$sums = array();
-			foreach($data as $vv){
+			foreach ($data as $vv) {
 				$v = $vv["costCenterCode"];
-				if(!array_key_exists($v,$sums)){
+				if (!array_key_exists($v, $sums)) {
 					$sums[$v] = 0;
 				}
 				$sums[$v]++;
 			}
-
 			//create array to pass for download pdf
 			$dataPDF = array(
-					'data'=> $data,
+					'data' => $data,
 					'sums' => $sums
 			);
 			?>
@@ -26,11 +25,11 @@
 						<input type="text" class="form-control col-6" id="email" name="email"
 							   placeholder="Enter recipient's email" required>
 						<input type="text" class="form-control col-6" id="data" name="data"
-							   value="<?php echo htmlspecialchars(json_encode($dataPDF));?>" hidden>
-<input type="text" class="form-control col-6" id="startDate" name="startDate"
-							   value="<?php echo $startDate;?>" hidden>
-<input type="text" class="form-control col-6" id="endDate" name="endDate"
-							   value="<?php echo $endDate;?>" hidden>
+							   value="<?php echo htmlspecialchars(json_encode($dataPDF)); ?>" hidden>
+						<input type="text" class="form-control col-6" id="startDate" name="startDate"
+							   value="<?php echo $startDate; ?>" hidden>
+						<input type="text" class="form-control col-6" id="endDate" name="endDate"
+							   value="<?php echo $endDate; ?>" hidden>
 
 						<button type="submit" class="btn btn-primary col-3 ">Email Report</button>
 
@@ -43,88 +42,137 @@
 
 	<div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
 		<div class="widget-content widget-content-area ">
-			<img src="<?php echo base_url(); ?>assets/assets/img/logo.png" class="img-fluid mr-2" alt="avatar"style="float: right">
+			<img src="<?php echo base_url(); ?>assets/assets/img/logo.png" class="img-fluid mr-2" alt="avatar"
+				 style="float: right"><br>
 
-			<h5>Report Summary</h5>
+			<h5>Report Summary</h5> <p style="float:right"><b><?php echo "Generated on " . date("d/m/Y") . "<br>"; ?></b></p><br>
 			<ul>
 				<?php
-				 foreach($sums as $key=>$value){ ?>
-			<li>	<p>Cost Center<b> <?php  echo $key?> </b> served <b><?php  echo $value?></b> meals</p></li>
-			<?php
-				 } ?>
-			</ul>
-			<p style="margin-left: 2%">Total Meals Served:<b><?php echo $total_events ;?> </b></p>
-			<div class="table-responsive mb-4 mt-4">
-				<table id="zero-config" class="table table-hover" style="width:100%">
-					<thead>
-					<h5 style="margin-left: 30%">Event Log Report Between <b>  <?php echo $startDate ;?> and   <?php echo $endDate ;?></b></h5>
-					<tr>
-						<th>#</th>
-						<th>User ID</th>
-						<th>Name</th>
-						<th>Cost Center Code</th>
-						<th>Cost Center Name</th>
-						<th>Device</th>
-						<th>Group ID</th>
-						<th>User Group</th>
-						<th>Event Type</th>
-						<th>Date Time</th>
-					</tr>
-					</thead>
-					<tbody>
+				foreach ($sums as $key => $value) {
+					$breakfastCounter = 0;
+					$lunchCounter = 0;
+					$dinnerCounter = 0;
+					$lateNightCounter = 0;
+					$outsideHours =0;
+
+				foreach ($data as $user) {
+
+					if ($user["costCenterCode"] == $key) {
+						$hour = substr($user['datetime'], -12, 2);
+						if ($hour >= 8 && $hour <= 10) {
+							$breakfastCounter++;
+						} elseif ($hour >= 11 && $hour <= 15) {
+							$lunchCounter++;
+						} elseif ($hour >= 20 && $hour <= 23) {
+							$dinnerCounter++;
+						} elseif ($hour >= 2 && $hour <= 4) {
+							$lateNightCounter++;
+						} else {
+							$outsideHours++;
+						}
+					}
+				}
+					?>
+			<?php 	$i = 0; ?>
+				<style>
+					ul li {
+						float:left;
+					}
+					ul li.break {
+						clear: right;
+						display: inline-block;
+						width: 33%;
+						margin: 10px 0;
+					}
+				</style>
+				<li <?php if ( $i % 3 == 0 ) echo ' class="break"' ?> ><p>Cost Center<b> <?php echo $key ?> </b> served <b><?php echo $value ?></b> meals</p>
+	<?php
+					echo "<b>Breakfast:- </b> ". $breakfastCounter ." Meals<br>";
+					echo "<b>Lunch:-</b> ". $lunchCounter ." Meals<br>";
+					echo "<b>Dinner:- </b> ". $dinnerCounter ." Meals<br>";
+					echo "<b>Late Night:- </b> ". $lateNightCounter ." Meals<br>";
+					echo "<b>Outside Hours:- </b>  ". $outsideHours ." Meals<br>";
+				//	echo "<b>Total Meals Served </b>  ". $breakfastCounter + $lunchCounter+ $dinnerCounter + $outsideHours ."<br>";
+
+				}?></li>
+				<br>
+				<br> <br>
+				<?php
+				$i++; ?></ul>
+<!--					<p style="margin-left: 2%">Total Meals Served:<b>--><?php //echo $total_events; ?><!-- </b></p>-->
+					<div class="table-responsive mb-4 mt-4">
+						<table id="zero-config" class="table table-hover" style="width:100%">
+							<thead>
+							<h5 style="margin-left: 30%">Event Log Report Between <b>  <?php echo $startDate; ?>
+									and <?php echo $endDate; ?></b></h5>
+							<tr>
+								<th>#</th>
+								<th>User ID</th>
+								<th>Name</th>
+								<th>Cost Center Code</th>
+								<th>Cost Center Name</th>
+								<th>Device</th>
+								<th>Group ID</th>
+								<th>User Group</th>
+								<th>Event Type</th>
+								<th>Date Time</th>
+							</tr>
+							</thead>
+							<tbody>
+							<?php
+							$count = 0;
+								foreach ($data as $user) {
+						//	if ($user["costCenterCode"] == $key) {
+								?>
+									<tr>
+										<td><?php echo $count + 1 ?></td>
+										<td><b><?php
+												if (isset($user['user_id'])) {
+													echo $user['user_id'];
+												} else {
+													echo "No User ID";
+												}
+												?></b></td>
+										<td><?php
+											if (isset($user['username'])) {
+												echo $user['username'];
+											} else {
+												echo "No Username";
+											}
+											?></td>
+										<td><?php echo $user['costCenterCode'] ?></td>
+										<td><?php echo $user['costCenterName'] ?></td>
+										<td><?php echo $user['device_id']['name'] ?></td>
+										<td><b><?php echo $user['user_group_id'] ?></b></td>
+										<td><?php echo $user['user_group_name'] ?></td>
+										<td><b><?php
+												if ($user['event_type'] == 4865) {
+													echo strtoupper("Fingerprint Identification Successful");
+												} ?>
+											</b></td>
+										<td><b><?php echo $user['datetime'] ?></b></td>
+
+									</tr>
+									<?php
+									$count++;
+							//	}
+							} ?>
+
+							</tbody>
+
+						</table>
+					</div>
 					<?php
-					$count = 0;
-
-
-					foreach ($data as $user) {
-
-
-						?>
-						<tr>
-							<td><?php echo $count + 1 ?></td>
-							<td><b><?php
-									if(isset($user['user_id'] )){
-										echo $user['user_id'];
-									}else{
-										echo "No User ID";
-									}
-								 ?></b></td>
-							<td><?php
-								if(isset($user['username'] )){
-									echo $user['username'];
-									}else{
-									echo "No Username";
-								}
-								?></td>
-							<td><?php echo $user['costCenterCode'] ?></td>
-							<td><?php echo $user['costCenterName'] ?></td>
-							<td><?php echo $user['device_id']['name'] ?></td>
-							<td><b><?php echo $user['user_group_id']?></b></td>
-							<td><?php echo $user['user_group_name'] ?></td>
-							<td><b><?php
-									if( $user['event_type'] == 4865) {
-										echo strtoupper("Fingerprint Identification Successful");
-									}?>
-								</b></td>
-							<td><b><?php echo $user['datetime'] ?></b></td>
-
-						</tr>
-						<?php
-						$count++;
-					} ?>
-
-					</tbody>
-
-				</table>
-			</div>
-
+				//} ?>
+			</ul>
 		</div>
 
 	</div>
-	<p class="">Powered By:	</p>
-	<img src="<?php echo base_url(); ?>assets/assets/img/nayalogo.png" class="img-fluid mr-2" alt="avatar" style="float: left">
+	<p class="">Powered By: </p>
+	<img src="<?php echo base_url(); ?>assets/assets/img/nayalogo.png" class="img-fluid mr-2" alt="avatar"
+		 style="float: left">
 
-	<button class="btn btn-danger  mb-2 mr-2" style="float: right">Download
+	<a href="<?php echo base_url(); ?>generate_report/download"><button class="btn btn-danger  mb-2 mr-2" style="float: right">Download
 		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
 			 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
 			 class="feather feather-download">
@@ -135,12 +183,10 @@
 			<line x1="12" y1="15" x2="12" y2="3"></line>
 		</svg>
 		Report
-	</button>
+	</button></a>
 
 
 </div>
-
-
 
 
 <!--  END CONTENT AREA  -->

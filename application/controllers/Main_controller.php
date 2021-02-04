@@ -48,7 +48,7 @@ class Main_controller extends CI_Controller
 		));
 
 		$response = curl_exec($curl);
-		//var_dump($response);
+	//	var_dump($response);
 
 		// Get bs-session-id from response header to authenticate other requests
 		$header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
@@ -136,7 +136,7 @@ class Main_controller extends CI_Controller
         "orders": [
             {
                 "column": "datetime",
-                "ascending": true
+                "ascending": false
             }
         ]
     }
@@ -155,7 +155,61 @@ class Main_controller extends CI_Controller
 
 return $data;
 	}
-	public function fetchUserInfo($userID=""){
+	public function  fetchUserInfoJson($userID="")
+	{
+		$readFile = file_get_contents("application/views/users.json");
+		$jsonData = json_decode($readFile, true);
+		$userArray = ($jsonData["UserCollection"]["rows"]);
+		//var_dump($userArray);
+		foreach ($userArray as $key => $value) {
+			if ($value["user_id"] == $userID) {
+			//	var_dump($value['user_custom_fields']);
+				$size = sizeof($value['user_custom_fields']);
+			//	var_dump($size);
+				$costCentreName= "";
+				$costCentreCode = 0;
+				$userInfo = [];
+				if ($size == 5) {
+					if (!empty($value['user_custom_fields'][1]['item'])) {
+						$costCentreName = $value['user_custom_fields'][1]['item'];
+					} else {
+						$costCentreName = 'No Cost Center Nam';
+					}
+
+					if (!empty($value['user_custom_fields'][2]['custom_field'])) {
+						$costCentreCode = $value['user_custom_fields'][2]['custom_field']['id'];
+
+					} else {
+						$costCentreCode = 'No Cost Center Code';
+					}
+
+				}else if($size == 4) {
+
+					if (!empty($value['user_custom_fields'][1]['custom_field'])) {
+						$costCentreCode = $value['user_custom_fields'][1]['item'];
+						$costCentreName = "No Cost Center Name";
+
+					}
+
+				}else if($size < 4){
+
+										$costCentreCode = "No Cost Center Code";
+					$costCentreName =  "No Cost Center Name";
+					}
+
+					$userInfo = array(
+						'userID' => $value['user_id'],
+						'username' => $value['name'],
+						'costCenterCode' => $costCentreCode,
+						'costCenterName' => $costCentreName
+					);
+				return $userInfo;
+
+			}
+			}
+
+	}
+	public function fetchUserInfoAPI($userID=""){
 		//login and get session id
 		$sessionID= $this->apiLogin();
 
@@ -348,7 +402,6 @@ return $data;
 
 	public function generate_report()
 	{
-
 		//collect input filters then fetch data from API
 		$date = $this->input->post('date');
 		$dateFro = substr($date, 0, 10);
@@ -356,7 +409,7 @@ return $data;
 
 		$mealTime = $this->input->post('mealTime');
 		$costcenter = $this->input->post('costcenter');
-		$limit = 100;
+		$limit = 16;
 		$deviceID= 546845493;/*CCBA*/
 //		$deviceID= 545406683;/*Nairobi Garage*/
 		$data = $this->fetchEvents($deviceID, $limit,  $dateFro, $dateTo, $mealTime, $costcenter);
@@ -364,8 +417,9 @@ return $data;
 		$fullData = [];
 		$summary =[];
 		for ($x= 0 ; $x< (sizeof($data[0])); $x ++){
-			$billingInfo = $this->fetchUserInfo($data[0][$x]['user_id']['user_id']);
-
+		//	$billingInfo = $this->fetchUserInfo($data[0][$x]['user_id']['user_id']);
+			$billingInfo = $this->fetchUserInfoJson($data[0][$x]['user_id']['user_id']);
+		//var_dump($billingInfo);
 			$fullData[] =  array(
 				'user_id'=> $data[0][$x]['user_id']['user_id'],
 				'username'=> $data[0][$x]['user_id']['name'],
@@ -386,6 +440,7 @@ return $data;
 			'endDate'=> $dateTo,
 			'total_events' => sizeof($data[0])
 		);
+	//	var_dump($arrayData);
 			$this->load->view('reports/viewReport', $arrayData); // pass the new array as the parameter
 	}
 
