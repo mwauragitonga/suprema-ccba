@@ -44,11 +44,11 @@
 		<div class="widget-content widget-content-area ">
 			<img src="<?php echo base_url(); ?>assets/assets/img/logo.png" class="img-fluid mr-2" alt="avatar"
 				 style="float: right"><br>
+			<h5>Event Log Report Between <b>  <?php echo $startDate ;?> and   <?php echo $endDate ;?></b></h5>
 
-			<h5>Report Summary</h5> <p style="float:right"><b><?php echo "Generated on " . date("d/m/Y") . "<br>"; ?></b></p><br>
-			<ul>
-
-			<?php 	$i = 0; ?>
+		 <p style="float:left"><b><?php echo "Generated on " . date("d/m/Y") . "<br>"; ?></b></p><br
+			<br>	<br><h5 >Report Summary</h5>
+					<?php 	$i = 0; ?>
 <!--				<style>-->
 <!--					ul li {-->
 <!--						float:left;-->
@@ -176,8 +176,6 @@
 					<div class="table-responsive mb-4 mt-4">
 						<table id="zero-config" class="table table-hover" style="width:100%">
 							<thead>
-							<h5 style="margin-left: 30%">Event Log Report Between <b>  <?php echo $startDate; ?>
-									and <?php echo $endDate; ?></b></h5>
 							<tr>
 								<th>#</th>
 								<th>User ID</th>
