@@ -44,10 +44,10 @@
 		<div class="widget-content widget-content-area ">
 			<img src="<?php echo base_url(); ?>assets/assets/img/logo.png" class="img-fluid mr-2" alt="avatar"
 				 style="float: right"><br>
-			<h5>Event Log Report Between <b>  <?php echo $startDate ;?> and   <?php echo $endDate ;?></b></h5>
-
-		 <p style="float:left"><b><?php echo "Generated on " . date("d/m/Y") . "<br>"; ?></b></p><br
-			<br>	<br><h5 >Report Summary</h5>
+			<h5 style="text-decoration: underline" >Event Log Report Between <b>  <?php echo $startDate ;?> and   <?php echo $endDate ;?></b></h5>
+		<br>
+		 <p style="float:left"><b style="text-decoration: underline"><?php echo "Generated on " . date("d-m-Y") ."  At ". date("H:i:s"). "<br>"; ?></b></p>
+			<br><br><h5 style="text-decoration: underline">Report Summary</h5>
 					<?php 	$i = 0; ?>
 <!--				<style>-->
 <!--					ul li {-->

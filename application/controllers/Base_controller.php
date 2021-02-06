@@ -5,11 +5,11 @@ use Mpdf\MpdfException;
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Main_controller extends CI_Controller
+class Base_controller extends CI_Controller
 {
 
 	/**
-	 * Main Controller for the Suprema  API  Consumer Application for Nairobi Bottlers Limited (Coke)
+	 * Base Controller for the Suprema  API  Consumer Application for Nairobi Bottlers Limited (Coke)
 	 * Start Date : 27.01.2021
 	 * @author  Mwaura Gitonga
 	 *email: gitongakmwaura@gmail.com
@@ -88,6 +88,7 @@ class Main_controller extends CI_Controller
 		return $headers;
 	}
 	public function fetchEvents($deviceID="", $limit="", $startDate="",$endDate="", $mealTime="", $costcenter=""){
+
 		//login and get session id
 		$sessionID= $this->apiLogin();
 		$data = array();
@@ -128,8 +129,8 @@ class Main_controller extends CI_Controller
                 "column": "datetime",
                 "operator": 3,
                 "values": [
-                    "2021-01-01T00:00:00.000Z",
-                    "2021-01-31T00:00:00.000Z"
+                    "'.$startDate.'T00:00:00.000Z",
+                    "'.$endDate.'T00:00:00.000Z"
                 ]
             }
         ],
@@ -409,7 +410,7 @@ return $data;
 
 		$mealTime = $this->input->post('mealTime');
 		$costcenter = $this->input->post('costcenter');
-		$limit = 16;
+		$limit = 160;
 		$deviceID= 546845493;/*CCBA*/
 //		$deviceID= 545406683;/*Nairobi Garage*/
 		$data = $this->fetchEvents($deviceID, $limit,  $dateFro, $dateTo, $mealTime, $costcenter);

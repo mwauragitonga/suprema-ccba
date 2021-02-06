@@ -104,7 +104,7 @@
 			}
 			?>
 			<h4 >Event Log Report Between <b>  <?php echo $startDate ;?> and   <?php echo $endDate ;?></b></h4>
-			<p style="float:right"><b><?php echo "Report Generated on " . date("d/m/Y") . "<br>"; ?></b></p><br>
+			<p style="float:right"><b><?php echo "Report Generated on " . date("d/m/Y") ." At ". date("H:i:s"). "<br>"; ?></b></p><br>
 
 			<br>
 			<h4 style="margin-left: 35%"><b>Report Summary</b></h4>
@@ -153,7 +153,7 @@
 
 						}
 						?>
-						<tr>
+						<tr style="height:2px">
 							<td><b><?php echo $key ?></b></td>
 							<!--									<td>--><?php //echo $user['costCenterName'] ?><!--</td>-->
 							<td><?php echo $breakfastCounter ?></td>
@@ -190,7 +190,7 @@
 						}
 
 					}?>
-					<tr>
+					<tr style="height:2px">
 						<th class="text-center">Total  Meals</th>
 						<th><b><?php echo ($sumBreakfast) ?></b></th>
 						<th><b><?php echo ($sumLunch) ?></th>
