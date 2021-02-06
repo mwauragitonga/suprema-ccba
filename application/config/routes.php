@@ -49,14 +49,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-$route['default_controller'] = 'Main_controller';
-$route['dashboard'] = 'Main_controller/index';
-$route['apiLogin'] = 'Main_controller/apiLogin';
-$route['fetchEvents'] = 'Main_controller/fetchEvents';
-$route['fetchUserInfo'] = 'Main_controller/fetchUserInfo';
-$route['fetchUserInfoJson'] = 'Main_controller/fetchUserInfoJson';
-$route['reports'] = 'Main_controller/reports';
-$route['generate_report/(:any)'] = 'Main_controller/generate_report';
-$route['email_report'] = 'Main_controller/prepareReport';
+$route['default_controller'] = 'Base_controller';
+$route['dashboard'] = 'Base_controller/index';
+$route['apiLogin'] = 'Base_controller/apiLogin';
+$route['fetchEvents'] = 'Base_controller/fetchEvents';
+$route['fetchUserInfo'] = 'Base_controller/fetchUserInfo';
+$route['fetchUserInfoJson'] = 'Base_controller/fetchUserInfoJson';
+$route['reports'] = 'Base_controller/reports';
+//$route['generate_report/(:any)'] = 'Base_controller/generate_report';
+$route['generate_report'] = 'Base_controller/generate_report';
+$route['email_report'] = 'Base_controller/prepareReport';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

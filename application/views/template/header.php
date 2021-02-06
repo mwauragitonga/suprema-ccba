@@ -18,6 +18,8 @@
 	<!-- END GLOBAL MANDATORY STYLES -->
 
 	<!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
+
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/plugins/table/datatable/custom_dt_multiple_tables.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/plugins/table/datatable/datatables.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/plugins/table/datatable/dt-global_style.css">
 	<link href="<?php echo base_url(); ?>assets/plugins/apex/apexcharts.css" rel="stylesheet" type="text/css">
