@@ -69,7 +69,7 @@
 							<thead>
 							<tr>
 								<th>Cost Center Code</th>
-<!--								<th>Cost Center Name</th>-->
+								<th>Cost Center Name</th>
 								<th>Breakfast</th>
 								<th>Lunch</th>
 								<th>Dinner</th>
@@ -80,6 +80,7 @@
 							</thead>
 							<tbody>
 							<?php
+							$costCenterName = '';
 							foreach ($sums as $key => $value) {
 							$breakfastCounter = 0;
 							$lunchCounter = 0;
@@ -88,9 +89,12 @@
 							$outsideHours =0;
 
 							foreach ($data as $user) {
+								$costCenterName = $user["costCenterName"] ;
 
 								//do  cost center meal time breakdown
 								if ($user["costCenterCode"] == $key) {
+									//($costCenterName);
+
 									$hour = substr($user['datetime'], -12, 2);
 									if ($hour >= 8 && $hour <= 10) {
 										$breakfastCounter++;
@@ -111,7 +115,18 @@
 							?>
 							<tr>
 									<td><b><?php echo $key ?></b></td>
-<!--									<td>--><?php //echo $user['costCenterName'] ?><!--</td>-->
+									<td><?php
+										$costCenterName = '';
+//									//	foreach($data as $user){
+//											if(array_key_exists($key, $data)){
+//												echo "true";
+//											//	$costCenterName = $user["costCenterName"] ;
+//										//
+//										//	}
+//
+//										}
+										echo $costCenterName;
+										?></td>
 									<td><?php echo $breakfastCounter ?></td>
 									<td><b><?php echo $lunchCounter ?></b></td>
 									<td><?php echo $dinnerCounter ?></td>

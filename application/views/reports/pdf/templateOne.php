@@ -113,7 +113,7 @@
 					<thead>
 					<tr>
 						<th>Cost Center Code</th>
-						<!--								<th>Cost Center Name</th>-->
+						<th>Cost Center Name</th>
 						<th>Breakfast</th>
 						<th>Lunch</th>
 						<th>Dinner</th>
@@ -155,7 +155,7 @@
 						?>
 						<tr style="height:2px">
 							<td><b><?php echo $key ?></b></td>
-							<!--									<td>--><?php //echo $user['costCenterName'] ?><!--</td>-->
+							<td><?php echo $user['costCenterName'] ?></td>
 							<td><?php echo $breakfastCounter ?></td>
 							<td><b><?php echo $lunchCounter ?></b></td>
 							<td><?php echo $dinnerCounter ?></td>

@@ -34,31 +34,31 @@
 												</div>
 											</div>
 
-											<div class="form-row mb-4">
-												<div class="form-group col-md-6">
-												</div>
-												<div class="form-group col-md-6">
-													<label for="costcenter">Cost Center</label>
-													<select id="costcenter"  name="costcenter" class="form-control" required>
-														<option selected>Choose...</option>
-														<option value="1">Canteen</option>
-													</select>
-												</div>
-											</div>
-											<div class="form-row mb-4">
-												<div class="form-group col-md-6">
-												</div>
-												<div class="form-group col-md-6">
-													<label for="mealTime">Meal Time</label>
-													<select id="mealTime" name="mealTime" class="form-control" required>
-														<option selected>Choose...</option>
-														<option value="1">Breakfast</option>
-														<option value="2">Lunch </option>
-														<option value="3">Dinner</option>
-														<option value="4">Late Night Tea</option>
-													</select>
-												</div>
-											</div>
+<!--											<div class="form-row mb-4">-->
+<!--												<div class="form-group col-md-6">-->
+<!--												</div>-->
+<!--												<div class="form-group col-md-6">-->
+<!--													<label for="costcenter">Cost Center</label>-->
+<!--													<select id="costcenter"  name="costcenter" class="form-control" required>-->
+<!--														<option selected>Choose...</option>-->
+<!--														<option value="1">Canteen</option>-->
+<!--													</select>-->
+<!--												</div>-->
+<!--											</div>-->
+<!--											<div class="form-row mb-4">-->
+<!--												<div class="form-group col-md-6">-->
+<!--												</div>-->
+<!--												<div class="form-group col-md-6">-->
+<!--													<label for="mealTime">Meal Time</label>-->
+<!--													<select id="mealTime" name="mealTime" class="form-control" required>-->
+<!--														<option selected>Choose...</option>-->
+<!--														<option value="1">Breakfast</option>-->
+<!--														<option value="2">Lunch </option>-->
+<!--														<option value="3">Dinner</option>-->
+<!--														<option value="4">Late Night Tea</option>-->
+<!--													</select>-->
+<!--												</div>-->
+<!--											</div>-->
 											<div class="form-row mb-4">
 												<div class="form-group col-md-6">
 
