@@ -19,6 +19,19 @@ class Base_controller extends CI_Controller
 	{
 		$this->load->view('reports/generateReport');
 	}
+public function viewUsers()
+	{
+		//fetch user array from json file
+		$readFile = file_get_contents("application/views/users.json");
+		$jsonData = json_decode($readFile, true);
+		$userArray = ($jsonData["UserCollection"]["rows"]);
+		$data = array(
+			'userArray' => $userArray
+		);
+		//load view
+		$this->load->view('users/users', $data);
+
+	}
 
 	public function apiLogin()
 	{
@@ -204,6 +217,8 @@ return $data;
 					$userInfo = array(
 						'userID' => $value['user_id'],
 						'username' => $value['name'],
+						'user_group_id' => $value['user_group_id']['id'],
+						'user_group_name' => $value['user_group_id']['name'],
 						'costCenterCode' => $costCentreCode,
 						'costCenterName' => $costCentreName
 					);
