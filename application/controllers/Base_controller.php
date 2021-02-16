@@ -152,6 +152,8 @@ class Base_controller extends CI_Controller
 			$decodedData= json_decode( $response, true);
 			$rows = $decodedData['EventCollection']['rows'];
 			$data[]= ( $rows);
+		}else{
+			echo "Could not access Suprema API, try again later!";
 		}
 
 return $data;
@@ -161,7 +163,6 @@ return $data;
 		$readFile = file_get_contents("application/views/users.json");
 		$jsonData = json_decode($readFile, true);
 		$userArray = ($jsonData["UserCollection"]["rows"]);
-		//var_dump($userArray);
 		foreach ($userArray as $key => $value) {
 			if ($value["user_id"] == $userID) {
 			//	var_dump($value['user_custom_fields']);
@@ -170,15 +171,17 @@ return $data;
 				$costCentreName= "";
 				$costCentreCode = 0;
 				$userInfo = [];
+
 				if ($size == 5) {
+				//	var_dump($value['user_custom_fields']);
 					if (!empty($value['user_custom_fields'][1]['item'])) {
 						$costCentreName = $value['user_custom_fields'][1]['item'];
 					} else {
-						$costCentreName = 'No Cost Center Nam';
+						$costCentreName = 'No Cost Center Name';
 					}
 
 					if (!empty($value['user_custom_fields'][2]['custom_field'])) {
-						$costCentreCode = $value['user_custom_fields'][2]['custom_field']['id'];
+						$costCentreCode = $value['user_custom_fields'][2]['item'];
 
 					} else {
 						$costCentreCode = 'No Cost Center Code';
@@ -194,7 +197,7 @@ return $data;
 
 				}else if($size < 4){
 
-										$costCentreCode = "No Cost Center Code";
+					$costCentreCode = "No Cost Center Code";
 					$costCentreName =  "No Cost Center Name";
 					}
 
@@ -209,6 +212,51 @@ return $data;
 			}
 			}
 
+	}
+	public function updateUserInfoJson(){
+		$readFile = file_get_contents("application/views/users.json");
+		$jsonData = json_decode($readFile, true);
+		$userArray = ($jsonData["UserCollection"]["rows"]);
+
+		//fetch user data
+		$users = $this->fetchUsersAPI();
+		//check if exists
+		//update details if exists
+		//if new user append data to json file
+	}
+
+	public function fetchUsersAPI(){
+//login and get session id
+		$sessionID= $this->apiLogin();
+		$users = array();
+		if(!empty($sessionID)) {
+
+			$curl = curl_init();
+
+			curl_setopt_array($curl, array(
+				CURLOPT_URL => 'https://ccba.biostar2.com/api/users?limit=5000&listOffset=0&offset=0&order_by=user_id%253Atrue&pageNum=1',
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_ENCODING => '',
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 0,
+				CURLOPT_FOLLOWLOCATION => true,
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST => 'GET',
+				CURLOPT_HTTPHEADER => array(
+					'accept: application/json',
+					'bs-session-id: 41eb40b287524599bd9cd8c48a0998fa'
+				),
+			));
+
+			$response = curl_exec($curl);
+
+			curl_close($curl);
+			echo $response;
+			$decodedData= json_decode( $response, true);
+			$rows = $decodedData['UserCollection']['rows'];
+			$users[]= ( $rows);
+
+		}
 	}
 	public function fetchUserInfoAPI($userID=""){
 		//login and get session id
@@ -272,7 +320,11 @@ return $data;
 				'costCenterCode'=>$costCentreCode,
 				'costCenterName'=>$costCentreName
 			);
-		}else{
+		} else if ($size == 4){
+			echo "stay frosty";
+		}
+
+		else{
 	//		var_dump($array2['contents'][0]['user_custom_fields']);
 
 			$userInfo = array(
@@ -410,39 +462,48 @@ return $data;
 
 		$mealTime = $this->input->post('mealTime');
 		$costcenter = $this->input->post('costcenter');
-		$limit = 160;
+		$limit = 50;
 		$deviceID= 546845493;/*CCBA*/
 //		$deviceID= 545406683;/*Nairobi Garage*/
 		$data = $this->fetchEvents($deviceID, $limit,  $dateFro, $dateTo, $mealTime, $costcenter);
 		$count =0;
 		$fullData = [];
 		$summary =[];
-		for ($x= 0 ; $x< (sizeof($data[0])); $x ++){
-		//	$billingInfo = $this->fetchUserInfo($data[0][$x]['user_id']['user_id']);
-			$billingInfo = $this->fetchUserInfoJson($data[0][$x]['user_id']['user_id']);
-		//var_dump($billingInfo);
-			$fullData[] =  array(
-				'user_id'=> $data[0][$x]['user_id']['user_id'],
-				'username'=> $data[0][$x]['user_id']['name'],
-				'device_id'=> $data[0][$x]['device_id'],
-				'user_group_id' => $data[0][$x]['user_group_id']['id'],
-				'user_group_name' => $data[0][$x]['user_group_id']['name'],
-				'event_type' => $data[0][$x]['event_type_id']['code'],
-				'datetime' => $data[0][$x]['datetime'],
-				'costCenterCode' => $billingInfo['costCenterCode'],
-				'costCenterName' => $billingInfo['costCenterName'],
+		$arrayData = [];
+		if(isset($data)){
+			for ($x= 0 ; $x< (sizeof($data[0])); $x ++){
+				//	$billingInfo = $this->fetchUserInfo($data[0][$x]['user_id']['user_id']);
+				$billingInfo = $this->fetchUserInfoJson($data[0][$x]['user_id']['user_id']);
+				//var_dump($billingInfo);
+				$fullData[] =  array(
+					'user_id'=> $data[0][$x]['user_id']['user_id'],
+					'username'=> $data[0][$x]['user_id']['name'],
+					'device_id'=> $data[0][$x]['device_id'],
+					'user_group_id' => $data[0][$x]['user_group_id']['id'],
+					'user_group_name' => $data[0][$x]['user_group_id']['name'],
+					'event_type' => $data[0][$x]['event_type_id']['code'],
+					'datetime' => $data[0][$x]['datetime'],
+					'costCenterCode' => $billingInfo['costCenterCode'],
+					'costCenterName' => $billingInfo['costCenterName'],
+
+				);
+			}
+
+			$arrayData = array(
+				'data'=> $fullData,
+				'startDate'=> $dateFro,
+				'endDate'=> $dateTo,
+				'total_events' => sizeof($data[0])
+			);
+		}else{
+			$arrayData = array(
+				'Message'=> "No Events Fetched",
 
 			);
 		}
 
-		$arrayData = array(
-			'data'=> $fullData,
-			'startDate'=> $dateFro,
-			'endDate'=> $dateTo,
-			'total_events' => sizeof($data[0])
-		);
-	//	var_dump($arrayData);
-			$this->load->view('reports/viewReport', $arrayData); // pass the new array as the parameter
+
+		$this->load->view('reports/viewReport', $arrayData); // pass the new array as the parameter
 	}
 
 

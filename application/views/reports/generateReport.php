@@ -1,9 +1,7 @@
 <?php  $this->load->view('template/header'); ?>
 <!--  BEGIN CONTENT AREA  -->
 <div id="content" class="main-content">
-	<div class="container">
-		<div class="container">
-			<div class="col-lg-12 col-12 layout-spacing">
+			<div class="col-lg-12 col-xl-12 col-12 layout-spacing">
 				<div class="statbox widget box box-shadow">
 					<div class="widget-header">
 						<div class="row">
@@ -11,10 +9,8 @@
 							</div>
 						</div>
 					</div>
-					<div class="widget-content widget-content-area">
 						<div class="row">
-							<div id="flFormsGrid" class="col-lg-12 layout-spacing">
-								<div class="statbox widget box box-shadow">
+							<div id="flFormsGrid" class="col-xl-10 col-lg-12 layout-spacing">
 									<div class="widget-header">
 										<div class="row">
 											<div class="col-xl-12 col-md-12 col-sm-12 col-12" >
@@ -22,13 +18,12 @@
 											</div>
 										</div>
 									</div>
-									<div class="widget-content widget-content-area">
 										<form  method="post" action="<?php echo base_url() ?>generate_report">
 											<div class="form-row mb-4">
-												<div class="form-group col-md-6">
+												<div class="form-group col-md-4">
 
 												</div>
-												<div class="form-group col-md-6">
+												<div class="form-group col-md-4">
 													<label for="inputPassword4">Date</label>
 													<input id="rangeCalendarFlatpickr" name="date" class="form-control flatpickr flatpickr-input active" type="text" placeholder="Select Date.." required>
 												</div>
@@ -60,10 +55,10 @@
 <!--												</div>-->
 <!--											</div>-->
 											<div class="form-row mb-4">
-												<div class="form-group col-md-6">
+												<div class="form-group col-md-4">
 
 												</div>
-												<div class="form-group col-md-6">
+												<div class="form-group col-md-4">
 													<label for="inputPassword4">Device</label>
 													<input type="password" class="form-control" id="inputPassword4" placeholder="Embakasi Canteen ">
 												</div>
@@ -86,9 +81,9 @@
 
 											</div>
 											<div class="form-row mb-4">
-												<div class="form-group col-md-6">
+												<div class="form-group col-md-4">
 												</div>
-												<div class="form-group col-md-6">
+												<div class="form-group col-md-4">
 													<button type="submit" class="btn btn-primary mt-9">Generate Report</button>
 
 												</div>
@@ -96,20 +91,10 @@
 
 										</form>
 
-									</div>
-								</div>
 							</div>
 						</div>
-
-
-					</div>
 				</div>
 			</div>
-
-
-
-		</div>
-	</div>
 
 
 <!--  END CONTENT AREA  -->

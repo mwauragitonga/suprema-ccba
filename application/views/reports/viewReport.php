@@ -89,18 +89,18 @@
 							$outsideHours =0;
 
 							foreach ($data as $user) {
-								$costCenterName = $user["costCenterName"] ;
+							//	$costCenterName = $user["costCenterName"] ;
 
 								//do  cost center meal time breakdown
 								if ($user["costCenterCode"] == $key) {
 									//($costCenterName);
 
 									$hour = substr($user['datetime'], -12, 2);
-									if ($hour >= 8 && $hour <= 10) {
+									if ($hour >= 7 && $hour <= 10) {
 										$breakfastCounter++;
-									} elseif ($hour >= 11 && $hour <= 15) {
+									} elseif ($hour >= 11 && $hour <= 16) {
 										$lunchCounter++;
-									} elseif ($hour >= 20 && $hour <= 23) {
+									} elseif ($hour >= 19 && $hour <= 23) {
 										$dinnerCounter++;
 									} elseif ($hour >= 2 && $hour <= 4) {
 										$lateNightCounter++;
@@ -115,17 +115,26 @@
 							?>
 							<tr>
 									<td><b><?php echo $key ?></b></td>
-									<td><?php
-										$costCenterName = '';
-//									//	foreach($data as $user){
-//											if(array_key_exists($key, $data)){
-//												echo "true";
-//											//	$costCenterName = $user["costCenterName"] ;
-//										//
-//										//	}
-//
-//										}
-										echo $costCenterName;
+								<td>
+<?php								$costCenterNames = [];
+										foreach($data as $user){
+											$costCenterNames [] = array(
+													'costCenterCode' => $user['costCenterCode'],
+													'costCenterName' => $user['costCenterName']
+											);
+
+										}
+
+										foreach ($costCenterNames as $costcenter){
+											if($costcenter['costCenterCode']==$key) {
+
+												$name =$costcenter['costCenterName'];
+
+												}
+											}
+
+											echo $name;
+
 										?></td>
 									<td><?php echo $breakfastCounter ?></td>
 									<td><b><?php echo $lunchCounter ?></b></td>
@@ -163,11 +172,12 @@
 							}?>
 							<tr>
 								<th class="text-center">Total  Meals</th>
+								<th class="text-center"></th>
 								<th><b><?php echo ($sumBreakfast) ?></b></th>
 								<th><b><?php echo ($sumLunch) ?></th>
 								<th><b><?php  echo ($sumDinner) ?></b></th>
 								<th><b><?php echo ($sumLNT) ?></b></th>
-								<th><b><?php echo ($outsideHours) ?></b></th>
+								<th><b><?php echo ($sumOutsideHours) ?></b></th>
 								<th><b><?php echo ($total_events) ?></b></th>
 <!--								<th class="text-center">Action</th>-->
 

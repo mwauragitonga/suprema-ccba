@@ -54,6 +54,7 @@ $route['dashboard'] = 'Base_controller/index';
 $route['apiLogin'] = 'Base_controller/apiLogin';
 $route['fetchEvents'] = 'Base_controller/fetchEvents';
 $route['fetchUserInfo'] = 'Base_controller/fetchUserInfo';
+$route['fetchUsersAPI'] = 'Base_controller/fetchUsersAPI';
 $route['fetchUserInfoJson'] = 'Base_controller/fetchUserInfoJson';
 $route['reports'] = 'Base_controller/reports';
 //$route['generate_report/(:any)'] = 'Base_controller/generate_report';
