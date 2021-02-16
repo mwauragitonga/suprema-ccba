@@ -368,6 +368,7 @@ return $data;
 
 	}
 	public function prepareReport(){
+		$mode = $this->uri->segment(2);
 		/*	prepare data for email title and body
 			1.email address
 			2.title(Event logs for day x to y )
@@ -377,9 +378,8 @@ return $data;
 		$email = $this->input->post("email");
 		$startDate = $this->input->post("startDate");
 		$endDate = $this->input->post("endDate");
-		$dataJson = $this->input->post('data');
+		$dataJson = $this->input->post('dataDownload');
 		$dataArray = json_decode(htmlspecialchars_decode($dataJson), true);
-
 		$data[]= ( $dataArray);
 		$i=0;
 		$cleanarray = array();
@@ -394,11 +394,13 @@ return $data;
 
 		$array2 =  array();  // create a new array
 		$array2['contents']= $cleanarray; // add $cleanarray to the new array
+		$mealTimes = $this->Base_model->getMealTimes();
 
 		$arrayData = array(
 			'contents'=> $array2,
 			'startDate'=> $startDate,
-			'endDate'=> $endDate
+			'endDate'=> $endDate,
+			'mealTimes' => $mealTimes
 		);
 		$mpdf = new Mpdf(array('tempDir' => APPPATH . '/views/reports/pdf/temp'));
 		try {
@@ -410,23 +412,18 @@ return $data;
 			$mpdf->WriteHTML($string_version);
 			$time = date('ymdhis');
 			ob_clean();
-		//	header('Content-Type: application/pdf');
+			//header('Content-Type: application/pdf');
 			error_reporting(0);
-			$mpdf->Output('Events Log Report' . $time . '.pdf', 'D');
+			if($mode== "download"){
+				$mpdf->Output('Events Log Report_' . $time . '.pdf', 'D');
+			}elseif($mode == "email"){
+			$pdf =	$mpdf->Output('Events Log Report_' . $time . '.pdf', 'S');
+			$this->email($pdf, $email);
+			}
 		} catch (MpdfException $e) {
 			echo $e->getMessage();
 		}
 
-		//email'
-		try {
-			$this->email($email, "Email Subject");
-		} catch (Exception $exception) {
-			//echo "error sending email";
-		}
-		$result = array('
-			status' => 'true'
-		);
-		//var_dump($result);
 	}
 
 	/**
@@ -435,8 +432,9 @@ return $data;
 	 * @param $mail_settings 'use this parameter to pass mail settings such as ssl, protocol,pass and user
 	 * @return bool
 	 */
-	public function email($mail = '', $title = '', $mail_settings = '')
+	public function email($pdf , $mail)
 	{
+		$title = "Reprot";
 		//$mail_settings;
 		$config['protocol'] = 'smtp';
 		$config['smtp_host'] = 'smtp.gmail.com';
@@ -456,15 +454,15 @@ return $data;
 		$this->email->to($mail);
 		$this->email->subject($title);
 
-		$files = scandir(APPPATH . 'views/reports/pdf/generatedFiles', SCANDIR_SORT_DESCENDING);
-		$newest_file = $files[0];
+		//$files = scandir(APPPATH . 'views/reports/pdf/generatedFiles', SCANDIR_SORT_DESCENDING);
+		//$newest_file = $files[0];
 		$this->email->message('Generated Report on ' . $title);
-		$this->email->attach(APPPATH . 'views/reports/pdf/generatedFiles/' . $newest_file);
+		$this->email->attach($pdf, 'attachment','report.pdf', 'application/pdf');
 		try {
 			if ($this->email->send()) {
-				//echo 'Email sent';
+				echo 'Email sent';
 			} else {
-			//	echo 'Email not Sent';
+				echo 'Email not Sent';
 			}
 		//	unlink(APPPATH . 'views/reports/pdf/generatedFiles/' . $newest_file);
 

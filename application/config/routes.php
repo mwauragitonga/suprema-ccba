@@ -63,5 +63,6 @@ $route['reports'] = 'Base_controller/reports';
 //$route['generate_report/(:any)'] = 'Base_controller/generate_report';
 $route['generate_report'] = 'Base_controller/generate_report';
 $route['email_report'] = 'Base_controller/prepareReport';
+$route['prepare_report/(:any)'] = 'Base_controller/prepareReport';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

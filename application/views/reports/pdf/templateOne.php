@@ -136,13 +136,13 @@
 							//do  cost center meal time breakdown
 							if ($user["costCenterCode"] == $key) {
 								$hour = substr($user['datetime'], -12, 2);
-								if ($hour >= 8 && $hour <= 10) {
+								if ($hour >=$mealTimes[0]->start_hour  && $hour <= $mealTimes[0]->end_hour) {
 									$breakfastCounter++;
-								} elseif ($hour >= 11 && $hour <= 15) {
+								} elseif ($hour >= $mealTimes[1]->start_hour && $hour <= $mealTimes[1]->end_hour) {
 									$lunchCounter++;
-								} elseif ($hour >= 20 && $hour <= 23) {
+								} elseif ($hour >= $mealTimes[2]->start_hour && $hour <= $mealTimes[2]->end_hour) {
 									$dinnerCounter++;
-								} elseif ($hour >= 2 && $hour <= 4) {
+								} elseif ($hour >= $mealTimes[3]->end_hour && $hour <= $mealTimes[3]->end_hour) {
 									$lateNightCounter++;
 								} else {
 									$outsideHours++;
@@ -153,9 +153,28 @@
 
 						}
 						?>
-						<tr style="height:2px">
+						<tr>
 							<td><b><?php echo $key ?></b></td>
-							<td><?php echo $user['costCenterName'] ?></td>
+							<td><?php
+								$costCenterNames = [];
+								foreach($contents['contents'][0]  as $user){
+									$costCenterNames [] = array(
+											'costCenterCode' => $user['costCenterCode'],
+											'costCenterName' => $user['costCenterName']
+									);
+
+								}
+								foreach ($costCenterNames as $costcenter){
+									if($costcenter['costCenterCode']==$key) {
+
+										$name =$costcenter['costCenterName'];
+
+									}
+								}
+
+								echo $name;
+
+								?></td>
 							<td><?php echo $breakfastCounter ?></td>
 							<td><b><?php echo $lunchCounter ?></b></td>
 							<td><?php echo $dinnerCounter ?></td>
@@ -177,13 +196,13 @@
 					foreach ($contents['contents'][0] as $user) {
 						//do overall meal time breakdown
 						$hours  = substr($user['datetime'], -12, 2);
-						if ($hours >= 8 && $hours <= 10) {
+						if ($hours >= $mealTimes[0]->start_hour && $hours <= $mealTimes[0]->end_hour) {
 							$sumBreakfast++;
-						} elseif ($hours >= 11 && $hours <= 15) {
+						} elseif ($hours >= $mealTimes[1]->start_hour && $hours <= $mealTimes[1]->end_hour) {
 							$sumLunch++;
-						} elseif ($hours >= 20 && $hours <= 23) {
+						} elseif ($hours >= $mealTimes[2]->start_hour && $hours <= $mealTimes[2]->end_hour) {
 							$sumDinner++;
-						} elseif ($hours >= 2 && $hours <= 4) {
+						} elseif ($hours >= $mealTimes[3]->start_hour && $hours <= $mealTimes[3]->end_hour) {
 							$sumLNT++;
 						} else {
 							$sumOutsideHours++;
@@ -191,6 +210,7 @@
 
 					}?>
 					<tr style="height:2px">
+						<th class="text-center"></th>
 						<th class="text-center">Total  Meals</th>
 						<th><b><?php echo ($sumBreakfast) ?></b></th>
 						<th><b><?php echo ($sumLunch) ?></th>
@@ -231,7 +251,8 @@
 						<th>Group ID</th>
 						<th>User Group</th>
 						<th>Event Type</th>
-						<th>Date Time</th>
+						<th>Date</th>
+						<th>Time</th>
 					</tr>
 					</thead>
 					<tbody>
@@ -266,8 +287,8 @@
 										echo strtoupper("Fingerprint Identification Successful");
 									}?>
 								</b></td>
-							<td><b><?php echo $user['datetime'] ?></b></td>
-
+							<td><b><?php echo substr($user['datetime'], 0, 10);?></b></td>
+							<td><b><?php echo substr($user['datetime'], 11, 8);?></b></td>
 						</tr>
 						<?php
 						$count++;

@@ -2,7 +2,7 @@
 <!--  BEGIN CONTENT AREA  -->
 <div id="content" class="main-content">
 	<div class="layout-px-spacing">
-		<form method="post" action="<?php echo base_url() ?>email_report">
+		<form method="post" action="<?php echo base_url() ?>prepare_report/email">
 			<?php
 			$count = 0;
 			$sums = array();
@@ -115,7 +115,8 @@
 							<tr>
 									<td><b><?php echo $key ?></b></td>
 								<td>
-<?php								$costCenterNames = [];
+				<?php
+				$costCenterNames = [];
 										foreach($data as $user){
 											$costCenterNames [] = array(
 													'costCenterCode' => $user['costCenterCode'],
@@ -137,9 +138,9 @@
 										?></td>
 									<td><?php echo $breakfastCounter ?></td>
 									<td><b><?php echo $lunchCounter ?></b></td>
-									<td><?php echo $dinnerCounter ?></td>
-									<td><?php echo $lateNightCounter ?></td>
-									<td><?php echo $outsideHours ?></td>
+									<td><b><?php echo $dinnerCounter ?></b></td>
+									<td><b><?php echo $lateNightCounter ?></b></td>
+									<td><b><?php echo $outsideHours ?></b></td>
 									<td><b><?php echo $value ?></b></td>
 								</tr>
 							<?php
@@ -170,8 +171,8 @@
 
 							}?>
 							<tr>
-								<th class="text-center">Total  Meals</th>
 								<th class="text-center"></th>
+								<th class="text-center">Total  Meals</th>
 								<th><b><?php echo ($sumBreakfast) ?></b></th>
 								<th><b><?php echo ($sumLunch) ?></th>
 								<th><b><?php  echo ($sumDinner) ?></b></th>
@@ -210,7 +211,8 @@
 								<th>Group ID</th>
 								<th>User Group</th>
 								<th>Event Type</th>
-								<th>Date Time</th>
+								<th>Date</th>
+								<th>Time</th>
 							</tr>
 							</thead>
 							<tbody>
@@ -245,7 +247,8 @@
 													echo strtoupper("Fingerprint Identification Successful");
 												} ?>
 											</b></td>
-										<td><b><?php echo $user['datetime'] ?></b></td>
+										<td><b><?php echo substr($user['datetime'], 0, 10);?></b></td>
+										<td><b><?php echo substr($user['datetime'], 11, 8);?></b></td>
 
 									</tr>
 									<?php
@@ -266,19 +269,48 @@
 	<p class="">Powered By: </p>
 	<img src="<?php echo base_url(); ?>assets/assets/img/nayalogo.png" class="img-fluid mr-2" alt="avatar"
 		 style="float: left">
+	<form method="post" action="<?php echo base_url() ?>prepare_report/download">
 
-	<a href="<?php echo base_url(); ?>generate_report"><button class="btn btn-danger  mb-2 mr-2" style="float: right">Download
-		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-			 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-			 class="feather feather-download">
-			<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4">
+	<div class="form-row col-9 mb-4">
+		<?php
+		$count = 0;
+		$sums = array();
+		foreach ($data as $vv) {
+			$v = $vv["costCenterCode"];
+			if (!array_key_exists($v, $sums)) {
+				$sums[$v] = 0;
+			}
+			$sums[$v]++;
+		}
+		//create array to pass for download pdf
+		$dataPDF = array(
+				'data' => $data,
+				'sums' => $sums
+		);
+		?>
+		<div class="form-group col-md-9">
+			<input type="text" class="form-control col-6" id="data" name="dataDownload"
+				   value="<?php echo htmlspecialchars(json_encode($dataPDF)); ?>" hidden>
+			<input type="text" class="form-control col-6" id="startDate" name="startDate"
+				   value="<?php echo $startDate; ?>" hidden>
+			<input type="text" class="form-control col-6" id="endDate" name="endDate"
+				   value="<?php echo $endDate; ?>" hidden>
 
-			</path>
-			<polyline points="7 10 12 15 17 10"></polyline>
-			<line x1="12" y1="15" x2="12" y2="3"></line>
-		</svg>
-		Report
-	</button></a>
+			<button type="submit" class="btn btn-danger  mb-2 mr-2" style="float: right">Download
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+						 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+						 class="feather feather-download">
+						<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4">
+
+						</path>
+						<polyline points="7 10 12 15 17 10"></polyline>
+						<line x1="12" y1="15" x2="12" y2="3"></line>
+					</svg>
+					Report
+				</button></a>
+
+		</div>
+	</div>
 
 
 </div>
