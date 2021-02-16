@@ -531,6 +531,64 @@ return $data;
 
 		$this->load->view('reports/viewReport', $arrayData); // pass the new array as the parameter
 	}
+	public function mealTimes(){
+		$mealTimes = $this->Base_model->getMealTimes();
+		$data = array(
+			'mealTimes' => $mealTimes
+		);
+		$this->load->view('settings/mealTimes', $data);
+
+	}
+	public function adjustMealTimes(){
+
+		$bfastStart = $this->input->post("bFastStart");
+		$bfastEnd = $this->input->post("bFastEnd");
+		$lunchStart = $this->input->post("lunchStart");
+		$lunchEnd = $this->input->post("lunchEnd");
+		$dinnerStart = $this->input->post("dinnerStart");
+		$dinnerEnd = $this->input->post("dinnerEnd");
+		$LNTStart = $this->input->post("LNTStart");
+		$LNTEnd = $this->input->post("LNTEnd");
+		$dataBreakFast = array(
+			'start_hour'=>$bfastStart,
+			'end_hour' => $bfastEnd
+		);
+		$dataLunch = array(
+			'start_hour'=>$lunchStart,
+			'end_hour'=>$lunchEnd
+		);
+		$dataDinner = array(
+			'start_hour'=>$dinnerStart,
+			'end_hour'=>$dinnerEnd
+		);
+		$dataLNT = array(
+			'start_hour'=>$LNTStart,
+			'end_hour'=>$LNTEnd
+		);
+
+		$updateBFast= $this->Base_model->updateBFast($dataBreakFast, 1);
+		$updateLunch = $this->Base_model->updateLunch($dataLunch, 2);
+		$updateDinner = $this->Base_model->updateDinner($dataDinner,3);
+		$updateLNT =$this->Base_model->updateLNT($dataLNT,4);
+		if($updateBFast == true && $updateLunch == true && $updateDinner == true && $updateLNT == true){
+			$mealTimes = $this->Base_model->getMealTimes();
+			$data = array(
+				"message" => "Update Successful!",
+				"messageType" => 1,
+				'mealTimes' => $mealTimes
+			);
+		}else{
+			$mealTimes = $this->Base_model->getMealTimes();
+			$data = array(
+				"message" => "Update Failed!",
+				"messageType" => 2,
+				'mealTimes' => $mealTimes
+			);
+		}
+
+		$this->load->view('settings/mealTimes', $data);
+
+	}
 
 
 	public function sendContactMail()
