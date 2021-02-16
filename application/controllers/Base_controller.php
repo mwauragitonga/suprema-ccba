@@ -8,6 +8,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Base_controller extends CI_Controller
 {
 
+	public function __construct()
+	{
+
+		parent::__construct();
+
+		$this->load->model('Base_model');
+		$this->load->library("bcrypt");
+		$this->load->library('upload');
+
+	}
 	/**
 	 * Base Controller for the Suprema  API  Consumer Application for Nairobi Bottlers Limited (Coke)
 	 * Start Date : 27.01.2021
@@ -24,7 +34,7 @@ public function viewUsers()
 		//fetch user array from json file
 		$readFile = file_get_contents("application/views/users.json");
 		$jsonData = json_decode($readFile, true);
-		$userArray = ($jsonData["UserCollection"]["rows"]);
+		$userArray = usort($jsonData["UserCollection"]["rows"], '');
 		$data = array(
 			'userArray' => $userArray
 		);
@@ -503,11 +513,12 @@ return $data;
 
 				);
 			}
-
+		$mealTimes = $this->Base_model->getMealTimes();
 			$arrayData = array(
 				'data'=> $fullData,
 				'startDate'=> $dateFro,
 				'endDate'=> $dateTo,
+				'mealTimes' => $mealTimes,
 				'total_events' => sizeof($data[0])
 			);
 		}else{

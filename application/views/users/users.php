@@ -17,6 +17,7 @@
 								<h4 style="margin-left: 50%">View Users</h4>
 							</div>
 						</div>
+						<button class="btn btn-success mb-2 mr-2"> Sync User Data</button>
 					</div>
 					<div class="table-responsive mb-4 mt-4">
 						<table id="zero-config" class="table table-hover" style="width:100%">

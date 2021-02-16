@@ -93,16 +93,15 @@
 
 								//do  cost center meal time breakdown
 								if ($user["costCenterCode"] == $key) {
-									//($costCenterName);
 
 									$hour = substr($user['datetime'], -12, 2);
-									if ($hour >= 7 && $hour <= 10) {
+									if ($hour >=$mealTimes[0]->start_hour  && $hour <= $mealTimes[0]->end_hour) {
 										$breakfastCounter++;
-									} elseif ($hour >= 11 && $hour <= 16) {
+									} elseif ($hour >= $mealTimes[1]->start_hour && $hour <= $mealTimes[1]->end_hour) {
 										$lunchCounter++;
-									} elseif ($hour >= 19 && $hour <= 23) {
+									} elseif ($hour >= $mealTimes[2]->start_hour && $hour <= $mealTimes[2]->end_hour) {
 										$dinnerCounter++;
-									} elseif ($hour >= 2 && $hour <= 4) {
+									} elseif ($hour >= $mealTimes[3]->end_hour && $hour <= $mealTimes[3]->end_hour) {
 										$lateNightCounter++;
 									} else {
 										$outsideHours++;
@@ -157,13 +156,13 @@
 							foreach ($data as $user) {
 								//do overall meal time breakdown
 								$hours  = substr($user['datetime'], -12, 2);
-								if ($hours >= 8 && $hours <= 10) {
+								if ($hours >= $mealTimes[0]->start_hour && $hours <= $mealTimes[0]->end_hour) {
 									$sumBreakfast++;
-								} elseif ($hours >= 11 && $hours <= 15) {
+								} elseif ($hours >= $mealTimes[1]->start_hour && $hours <= $mealTimes[1]->end_hour) {
 									$sumLunch++;
-								} elseif ($hours >= 20 && $hours <= 23) {
+								} elseif ($hours >= $mealTimes[2]->start_hour && $hours <= $mealTimes[2]->end_hour) {
 									$sumDinner++;
-								} elseif ($hours >= 2 && $hours <= 4) {
+								} elseif ($hours >= $mealTimes[3]->start_hour && $hours <= $mealTimes[3]->end_hour) {
 									$sumLNT++;
 								} else {
 									$sumOutsideHours++;
