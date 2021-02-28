@@ -24,6 +24,9 @@
 
 </header>
 <h1>Report Summary</h1>
+<div id="chart">
+
+</div>
 <?php
 $count = 0;
 $sums = array();
@@ -212,4 +215,113 @@ foreach($contents['contents'][0] as $vv){
 
 </main>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+	var options = {
+		series: [{
+			<?php
+			arsort($sums);
+			$sums =  array_slice(	$sums, 0, 5, true) ;
+			$breakfastCounter = 0;
+			$lunchCounter = 0;
+			$dinnerCounter = 0;
+			$lateNightCounter = 0;
+			$outsideHours =0;
+			foreach($sums as $key => $value){
+			if(isset($data)){
+				foreach ($data as $user) {
+					//	$costCenterName = $user["costCenterName"] ;
+					//do  cost center meal time breakdown
+					if ($user["costCenterCode"] == $key) {
+						$hour = substr($user['datetime'], -12, 2);
+						if ($hour >=$mealTimes[0]->start_hour  && $hour <= $mealTimes[0]->end_hour) {
+							$breakfastCounter++;
+						} elseif ($hour >= $mealTimes[1]->start_hour && $hour <= $mealTimes[1]->end_hour) {
+							$lunchCounter++;
+						} elseif ($hour >= $mealTimes[2]->start_hour && $hour <= $mealTimes[2]->end_hour) {
+							$dinnerCounter++;
+						} elseif ($hour >= $mealTimes[3]->end_hour && $hour <= $mealTimes[3]->end_hour) {
+							$lateNightCounter++;
+						} else {
+							$outsideHours++;
+						}
+
+					}
+
+				}
+			}
+
+
+			?>
+			<?php 	} ?>
+			name: 'Total Meals',
+			data: [<?php echo [10,17,34,21,64] ?>]
+		}, {
+			name: 'Breakfast',
+			data: [<?php echo 10; ?>]
+		}, {
+			name: 'Lunch',
+			data: [<?php echo 10; ?>]
+		}, {
+			name: 'Dinner',
+			data: [<?php echo 10; ?>]
+		}, {
+			name: 'LNT',
+			data: [<?php echo 10; ?>]
+		}, {
+			name: 'Outside Hours',
+			data: [<?php echo 10; ?>]
+		}
+
+
+		],
+		chart: {
+			type: 'bar',
+			height: 350
+		},
+		plotOptions: {
+			bar: {
+				horizontal: false,
+				columnWidth: '55%',
+				endingShape: 'rounded'
+			},
+		},
+		dataLabels: {
+			enabled: false
+		},
+		stroke: {
+			show: true,
+			width: 2,
+			colors: ['transparent']
+		},
+		xaxis: {
+			categories: [<?php
+				$keys= array();
+				foreach($sums as $key=> $value){
+				$keys[]=  $key;
+
+			}
+				echo implode(',', $keys);
+				?>],
+		},
+		yaxis: {
+			title: {
+				text: ' (Meals)'
+			}
+		},
+		fill: {
+			opacity: 1
+		},
+		tooltip: {
+			y: {
+				formatter: function (val) {
+					return "" + val + " Meals"
+				}
+			}
+		}
+	};
+
+	var chart = new ApexCharts(document.querySelector("#chart"), options);
+	chart.render();
+</script>
 </html>

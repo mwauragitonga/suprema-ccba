@@ -455,8 +455,8 @@ return $data;
 			error_reporting(0);
 			if($mode== "download"){
 				ini_set("pcre.backtrack_limit", "10000000");
-				header('Content-Type: application/pdf');
-				$mpdf->Output('Events Log Report_' . $time . '.pdf', 'D');
+			//	header('Content-Type: application/pdf');
+				$mpdf->Output('Events Log Report_' . $time . '.pdf', 'F');
 			}elseif($mode == "email"){
 			$pdf =	$mpdf->Output('Events Log Report_' . $time . '.pdf', 'S');
 			$this->email($pdf, $email);

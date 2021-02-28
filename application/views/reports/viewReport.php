@@ -342,82 +342,20 @@
 <!--  END CONTENT AREA  -->
 <?php $this->load->view('template/footer'); ?>
 <script>
-
-
-
-	var options = {
-		chart: {
-			type: 'line'
-		},
-		series: [{
-			name: 'sales',
-			data: [<?php
-				for($x =0; $x< 5 ; $x++){
-					$total = implode(',', array_slice($sums, 0, 5, true));
-					echo $total;
-				}
-
-				?>]
-		}],
-		xaxis: {
-			categories: [1991,1992,1993,1994,1995,1996,1997, 1998,1999]
-		}
-	}
-
 	var options = {
 		series: [{
 			<?php
 			arsort($sums);
 			$sums =  array_slice(	$sums, 0, 5, true) ;
-			$breakfastCounter = 0;
-			$lunchCounter = 0;
-			$dinnerCounter = 0;
-			$lateNightCounter = 0;
-			$outsideHours =0;
-			foreach($sums as $key => $value){
-				if(isset($data)){
-					foreach ($data as $user) {
-						//	$costCenterName = $user["costCenterName"] ;
-						//do  cost center meal time breakdown
-						if ($user["costCenterCode"] == $key) {
-							$hour = substr($user['datetime'], -12, 2);
-							if ($hour >=$mealTimes[0]->start_hour  && $hour <= $mealTimes[0]->end_hour) {
-								$breakfastCounter++;
-							} elseif ($hour >= $mealTimes[1]->start_hour && $hour <= $mealTimes[1]->end_hour) {
-								$lunchCounter++;
-							} elseif ($hour >= $mealTimes[2]->start_hour && $hour <= $mealTimes[2]->end_hour) {
-								$dinnerCounter++;
-							} elseif ($hour >= $mealTimes[3]->end_hour && $hour <= $mealTimes[3]->end_hour) {
-								$lateNightCounter++;
-							} else {
-								$outsideHours++;
-							}
-
-						}
-
-					}
-				}
-
-
-			?>
-			<?php 	} ?>
+		 ?>
 			name: 'Total Meals',
-			data: [<?php echo $breakfastCounter + $lunchCounter + $dinnerCounter + $lateNightCounter + $outsideHours ?>]
-		}, {
-			name: 'Breakfast',
-			data:  [<?php echo $breakfastCounter ?>]
-		}, {
-			name: 'Lunch',
-			data:  [<?php echo $lunchCounter ?>]
-		}, {
-			name: 'Dinner',
-			data:  [<?php echo $dinnerCounter ?>]
-		}, {
-			name: 'LNT',
-			data:  [<?php echo $lateNightCounter ?>]
-		}, {
-			name: 'Outside Hours',
-			data:  [<?php echo $outsideHours ?>]
+			data: [<?php
+				$values= array();
+				foreach($sums as $key=> $value){
+					$values[]=  $value;
+				}
+				echo implode(',', $values);
+				?>]
 		}
 
 
@@ -442,9 +380,14 @@
 			colors: ['transparent']
 		},
 		xaxis: {
-			categories: [<?php foreach($sums as $key=> $value){
-				echo $key;
-			}?>],
+			categories: [<?php
+				$keys= array();
+				foreach($sums as $key=> $value){
+					$keys[]=  $key;
+
+				}
+				echo implode(',', $keys);
+				?>],
 			},
 			yaxis: {
 				title: {
@@ -465,7 +408,4 @@
 
 	var chart = new ApexCharts(document.querySelector("#chart"), options);
 	chart.render();
-
-
-
 </script>
