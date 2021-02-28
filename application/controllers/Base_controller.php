@@ -14,7 +14,7 @@ class Base_controller extends CI_Controller
 		parent::__construct();
 
 		$this->load->model('Base_model');
-		$this->load->library("bcrypt");
+		$this->load->library("Bcrypt");
 		$this->load->library('upload');
 
 	}
@@ -23,18 +23,52 @@ class Base_controller extends CI_Controller
 	 * Start Date : 27.01.2021
 	 * @author  Mwaura Gitonga
 	 *email: gitongakmwaura@gmail.com
-	 * U70XDN
-	 */
+	 * U70XDN */
+
 	public function index()
 	{
-		$this->load->view('reports/generateReport');
+		$this->load->view('authentication/login');
 	}
-public function viewUsers()
+	public function logout()
+	{
+		$this->load->view('authentication/login');
+	}
+	public function login()
+		{
+			$username = $this->input->post('username');
+			$password = $this->input->post('password');
+		//	$hashed =
+			$status = $this->Base_model->login_validation($username, $password);
+			$userDetails = $this->Base_model->getUserDetails($username);
+
+			if($status == true){
+			$this->session->set_userdata('status', 'true');
+			$this->session->set_userdata('username', $userDetails->username);
+			$this->session->set_userdata('userType', 'admin');
+			$this->home();
+
+		}else{
+				$this->index();
+			}
+		}
+
+
+		public function home()
+	{
+		if($this->session->userdata('status')== "true"){
+			$this->load->view('reports/generateReport');
+
+		}else{
+			$this->index();
+		}
+	}
+
+	public function viewUsers()
 	{
 		//fetch user array from json file
 		$readFile = file_get_contents("application/views/users.json");
 		$jsonData = json_decode($readFile, true);
-		$userArray = usort($jsonData["UserCollection"]["rows"], '');
+		$userArray = ($jsonData["UserCollection"]["rows"]);
 		$data = array(
 			'userArray' => $userArray
 		);
@@ -189,6 +223,8 @@ return $data;
 		foreach ($userArray as $key => $value) {
 			if ($value["user_id"] == $userID) {
 			//	var_dump($value['user_custom_fields']);
+				if(isset($value['user_custom_fields'])){
+
 				$size = sizeof($value['user_custom_fields']);
 			//	var_dump($size);
 				$costCentreName= "";
@@ -196,14 +232,14 @@ return $data;
 				$userInfo = [];
 
 				if ($size == 5) {
-				//	var_dump($value['user_custom_fields']);
+					//var_dump($value['user_custom_fields'][2]['item']);
 					if (!empty($value['user_custom_fields'][1]['item'])) {
 						$costCentreName = $value['user_custom_fields'][1]['item'];
 					} else {
 						$costCentreName = 'No Cost Center Name';
 					}
 
-					if (!empty($value['user_custom_fields'][2]['custom_field'])) {
+					if (!empty($value['user_custom_fields'][2]['item'])) {
 						$costCentreCode = $value['user_custom_fields'][2]['item'];
 
 					} else {
@@ -223,7 +259,10 @@ return $data;
 					$costCentreCode = "No Cost Center Code";
 					$costCentreName =  "No Cost Center Name";
 					}
-
+				}else{
+					$costCentreCode = "No Custom User Fields";
+					$costCentreName =  "No Custom User Fields";
+				}
 					$userInfo = array(
 						'userID' => $value['user_id'],
 						'username' => $value['name'],
@@ -406,15 +445,17 @@ return $data;
 		try {
 			$mpdf = new \Mpdf\Mpdf();
 			$mpdf->debug = false;
-			$html = $this->load->view('reports/pdf/templateOne', $arrayData);// pass the new array as the parameter
+			$html = $this->load->view('reports/pdf/templateThree', $arrayData);// pass the new array as the parameter
 			$string_version = serialize($html);
 			$mpdf->charset_in = 'utf-8';
 			$mpdf->WriteHTML($string_version);
 			$time = date('ymdhis');
 			ob_clean();
-			//header('Content-Type: application/pdf');
+			
 			error_reporting(0);
 			if($mode== "download"){
+				ini_set("pcre.backtrack_limit", "10000000");
+				header('Content-Type: application/pdf');
 				$mpdf->Output('Events Log Report_' . $time . '.pdf', 'D');
 			}elseif($mode == "email"){
 			$pdf =	$mpdf->Output('Events Log Report_' . $time . '.pdf', 'S');
@@ -485,7 +526,7 @@ return $data;
 
 		$mealTime = $this->input->post('mealTime');
 		$costcenter = $this->input->post('costcenter');
-		$limit = 50;
+		$limit = 30;
 		$deviceID= 546845493;/*CCBA*/
 //		$deviceID= 545406683;/*Nairobi Garage*/
 		$data = $this->fetchEvents($deviceID, $limit,  $dateFro, $dateTo, $mealTime, $costcenter);
@@ -494,36 +535,47 @@ return $data;
 		$summary =[];
 		$arrayData = [];
 		if(isset($data)){
-			for ($x= 0 ; $x< (sizeof($data[0])); $x ++){
-				//	$billingInfo = $this->fetchUserInfo($data[0][$x]['user_id']['user_id']);
-				$billingInfo = $this->fetchUserInfoJson($data[0][$x]['user_id']['user_id']);
-				//var_dump($billingInfo);
-				$fullData[] =  array(
-					'user_id'=> $data[0][$x]['user_id']['user_id'],
-					'username'=> $data[0][$x]['user_id']['name'],
-					'device_id'=> $data[0][$x]['device_id'],
-					'user_group_id' => $data[0][$x]['user_group_id']['id'],
-					'user_group_name' => $data[0][$x]['user_group_id']['name'],
-					'event_type' => $data[0][$x]['event_type_id']['code'],
-					'datetime' => $data[0][$x]['datetime'],
-					'costCenterCode' => $billingInfo['costCenterCode'],
-					'costCenterName' => $billingInfo['costCenterName'],
+			if(isset($data[0])){
+
+				for ($x= 0 ; $x< (sizeof($data[0])); $x ++){
+					//	$billingInfo = $this->fetchUserInfo($data[0][$x]['user_id']['user_id']);
+					$billingInfo = $this->fetchUserInfoJson($data[0][$x]['user_id']['user_id']);
+
+					if(isset($billingInfo)){
+
+					//	var_dump($billingInfo);
+						$fullData[] =  array(
+							'user_id'=> $data[0][$x]['user_id']['user_id'],
+							'username'=> $data[0][$x]['user_id']['name'],
+							'device_id'=> $data[0][$x]['device_id'],
+							'user_group_id' => $data[0][$x]['user_group_id']['id'],
+							'user_group_name' => $data[0][$x]['user_group_id']['name'],
+							'event_type' => $data[0][$x]['event_type_id']['code'],
+							'datetime' => $data[0][$x]['datetime'],
+							'costCenterCode' => $billingInfo['costCenterCode'],
+							'costCenterName' => $billingInfo['costCenterName'],
+
+						);
+					}
+				}
+				$mealTimes = $this->Base_model->getMealTimes();
+				if(isset($data[0])){
+					$totalEvents=	sizeof($data[0]);
+
+					$arrayData = array(
+						'data'=> $fullData,
+						'startDate'=> $dateFro,
+						'endDate'=> $dateTo,
+						'mealTimes' => $mealTimes,
+						'total_events' => $totalEvents
+					);
+				}
+			}else{
+				$arrayData = array(
+					'message'=> "No Events Fetched",
 
 				);
 			}
-		$mealTimes = $this->Base_model->getMealTimes();
-			$arrayData = array(
-				'data'=> $fullData,
-				'startDate'=> $dateFro,
-				'endDate'=> $dateTo,
-				'mealTimes' => $mealTimes,
-				'total_events' => sizeof($data[0])
-			);
-		}else{
-			$arrayData = array(
-				'Message'=> "No Events Fetched",
-
-			);
 		}
 
 

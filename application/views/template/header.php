@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
-	<title>Suprema Reports - Nairobi Bottlers Limited</title>
+	<title>Suprema Reports - CocaCola Beverages Africa</title>
 	<link rel="icon" type="image/x-icon" href="<?php echo base_url(); ?>assets/assets/img/favicon.ico"/>
 	<link href="<?php echo base_url(); ?>assets/assets/css/loader.css" rel="stylesheet" type="text/css" />
 	<script src="<?php echo base_url(); ?>assets/assets/js/loader.js"></script>
@@ -15,6 +15,7 @@
 	<link href="<?php echo base_url(); ?>assets/assets/css/plugins.css" rel="stylesheet" type="text/css" />
 	<link href="<?php echo base_url(); ?>assets/plugins/flatpickr/flatpickr.css" rel="stylesheet" type="text/css">
 	<link href="<?php echo base_url(); ?>assets/plugins/noUiSlider/nouislider.min.css" rel="stylesheet" type="text/css">
+
 	<!-- END GLOBAL MANDATORY STYLES -->
 
 	<!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->

@@ -21,7 +21,11 @@
 <script src="<?php echo base_url(); ?>assets/bootstrap/js/bootstrap.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/assets/js/app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
+<script>
+
+</script>
 <script>
 	$(document).ready(function() {
 		App.init();

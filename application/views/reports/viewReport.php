@@ -1,47 +1,53 @@
 <?php $this->load->view('template/header'); ?>
 <!--  BEGIN CONTENT AREA  -->
 <div id="content" class="main-content">
-	<div class="layout-px-spacing">
-		<form method="post" action="<?php echo base_url() ?>prepare_report/email">
-			<?php
-			$count = 0;
-			$sums = array();
-			foreach ($data as $vv) {
-				$v = $vv["costCenterCode"];
-				if (!array_key_exists($v, $sums)) {
-					$sums[$v] = 0;
-				}
-				$sums[$v]++;
-			}
-			//create array to pass for download pdf
-			$dataPDF = array(
-					'data' => $data,
-					'sums' => $sums
-			);
-			?>
-			<div class="row layout-top-spacing" id="cancel-row">
-				<div class="form-row col-9 mb-4">
-					<div class="form-group col-md-9">
-						<input type="text" class="form-control col-6" id="email" name="email"
-							   placeholder="Enter recipient's email" required>
-						<input type="text" class="form-control col-6" id="data" name="data"
-							   value="<?php echo htmlspecialchars(json_encode($dataPDF)); ?>" hidden>
-						<input type="text" class="form-control col-6" id="startDate" name="startDate"
-							   value="<?php echo $startDate; ?>" hidden>
-						<input type="text" class="form-control col-6" id="endDate" name="endDate"
-							   value="<?php echo $endDate; ?>" hidden>
+<!--	<div class="layout-px-spacing">-->
 
-						<button type="submit" class="btn btn-primary col-3 ">Email Report</button>
+<!--		<form method="post" action="--><?php //echo base_url() ?><!--prepare_report/email">-->
+<!--		-->
+<!--			<div class="row layout-top-spacing" id="cancel-row">-->
+<!--				<div class="form-row col-9 mb-4">-->
+<!--					<div class="form-group col-md-9">-->
+<!--						<input type="text" class="form-control col-6" id="email" name="email"-->
+<!--							   placeholder="Enter recipient's email" required>-->
+<!--						<input type="text" class="form-control col-6" id="data" name="data"-->
+<!--							   value="--><?php //echo htmlspecialchars(json_encode($dataPDF)); ?><!--" hidden>-->
+<!--						<input type="text" class="form-control col-6" id="startDate" name="startDate"-->
+<!--							   value="--><?php //echo $startDate; ?><!--" hidden>-->
+<!--						<input type="text" class="form-control col-6" id="endDate" name="endDate"-->
+<!--							   value="--><?php //echo $endDate; ?><!--" hidden>-->
+<!---->
+<!--						<button type="submit" class="btn btn-primary col-3 ">Email Report</button>-->
+<!---->
+<!--					</div>-->
+<!--				</div>-->
+<!---->
+<!--		</form>-->
 
-					</div>
-				</div>
-
-		</form>
-
-	</div>
+<!--	</div>-->
 
 	<div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
+		<?php
+		$count = 0;
+		$sums = array();
+		foreach ($data as $vv) {
+			$v = $vv["costCenterCode"];
+			if (!array_key_exists($v, $sums)) {
+				$sums[$v] = 0;
+			}
+			$sums[$v]++;
+		}
+		//create array to pass for download pdf
+		$dataPDF = array(
+				'data' => $data,
+				'sums' => $sums
+		);
+		?>
+
 		<div class="widget-content widget-content-area ">
+			<div id="chart">
+
+			</div>
 			<img src="<?php echo base_url(); ?>assets/assets/img/logo.png" class="img-fluid mr-2" alt="avatar"
 				 style="float: right"><br>
 			<h5 style="text-decoration: underline" >Event Log Report Between <b>  <?php echo $startDate ;?> and   <?php echo $endDate ;?></b></h5>
@@ -81,69 +87,78 @@
 							<tbody>
 							<?php
 							$costCenterName = '';
-							foreach ($sums as $key => $value) {
-							$breakfastCounter = 0;
-							$lunchCounter = 0;
-							$dinnerCounter = 0;
-							$lateNightCounter = 0;
-							$outsideHours =0;
+							if(isset($sums)){
+									arsort($sums);
+									//var_dump($sums);
+								foreach ($sums as $key => $value) {
 
-							foreach ($data as $user) {
-							//	$costCenterName = $user["costCenterName"] ;
+									$breakfastCounter = 0;
+									$lunchCounter = 0;
+									$dinnerCounter = 0;
+									$lateNightCounter = 0;
+									$outsideHours =0;
+									if(isset($data)){
+										foreach ($data as $user) {
+											//	$costCenterName = $user["costCenterName"] ;
 
-								//do  cost center meal time breakdown
-								if ($user["costCenterCode"] == $key) {
+											//do  cost center meal time breakdown
+											if ($user["costCenterCode"] == $key) {
 
-									$hour = substr($user['datetime'], -12, 2);
-									if ($hour >=$mealTimes[0]->start_hour  && $hour <= $mealTimes[0]->end_hour) {
-										$breakfastCounter++;
-									} elseif ($hour >= $mealTimes[1]->start_hour && $hour <= $mealTimes[1]->end_hour) {
-										$lunchCounter++;
-									} elseif ($hour >= $mealTimes[2]->start_hour && $hour <= $mealTimes[2]->end_hour) {
-										$dinnerCounter++;
-									} elseif ($hour >= $mealTimes[3]->end_hour && $hour <= $mealTimes[3]->end_hour) {
-										$lateNightCounter++;
-									} else {
-										$outsideHours++;
-									}
+												$hour = substr($user['datetime'], -12, 2);
+												if ($hour >=$mealTimes[0]->start_hour  && $hour <= $mealTimes[0]->end_hour) {
+													$breakfastCounter++;
+												} elseif ($hour >= $mealTimes[1]->start_hour && $hour <= $mealTimes[1]->end_hour) {
+													$lunchCounter++;
+												} elseif ($hour >= $mealTimes[2]->start_hour && $hour <= $mealTimes[2]->end_hour) {
+													$dinnerCounter++;
+												} elseif ($hour >= $mealTimes[3]->end_hour && $hour <= $mealTimes[3]->end_hour) {
+													$lateNightCounter++;
+												} else {
+													$outsideHours++;
+												}
 
-								}
+											}
 
-
-							}
-							?>
-							<tr>
-									<td><b><?php echo $key ?></b></td>
-								<td>
-				<?php
-				$costCenterNames = [];
-										foreach($data as $user){
-											$costCenterNames [] = array(
-													'costCenterCode' => $user['costCenterCode'],
-													'costCenterName' => $user['costCenterName']
-											);
 
 										}
+									}
 
-										foreach ($costCenterNames as $costcenter){
-											if($costcenter['costCenterCode']==$key) {
-
-												$name =$costcenter['costCenterName'];
-
+									?>
+									<tr>
+										<td><b><?php echo $key ?></b></td>
+										<td>
+											<?php
+											$costCenterNames = [];
+											if(isset($data)){
+												foreach($data as $user){
+													$costCenterNames [] = array(
+															'costCenterCode' => $user['costCenterCode'],
+															'costCenterName' => $user['costCenterName']
+													);
 												}
 											}
 
-											echo $name;
+											if(isset($costCenterNames)){
+												foreach ($costCenterNames as $costcenter){
+													if($costcenter['costCenterCode']==$key) {
+														$name =$costcenter['costCenterName'];
+													}
+												}
+												echo $name;
+											}
 
-										?></td>
-									<td><?php echo $breakfastCounter ?></td>
-									<td><b><?php echo $lunchCounter ?></b></td>
-									<td><b><?php echo $dinnerCounter ?></b></td>
-									<td><b><?php echo $lateNightCounter ?></b></td>
-									<td><b><?php echo $outsideHours ?></b></td>
-									<td><b><?php echo $value ?></b></td>
-								</tr>
-							<?php
+
+											?></td>
+										<td><?php echo $breakfastCounter ?></td>
+										<td><b><?php echo $lunchCounter ?></b></td>
+										<td><b><?php echo $dinnerCounter ?></b></td>
+										<td><b><?php echo $lateNightCounter ?></b></td>
+										<td><b><?php echo $outsideHours ?></b></td>
+										<td><b><?php echo $value ?></b></td>
+									</tr>
+									<?php
+								}
+
 							}
 							?>
 							</tbody>
@@ -218,6 +233,9 @@
 							<tbody>
 							<?php
 							$count = 0;
+							if(isset($data)){
+
+
 								foreach ($data as $user) {
 						//	if ($user["costCenterCode"] == $key) {
 								?>
@@ -239,7 +257,7 @@
 											?></td>
 										<td><?php echo $user['costCenterCode'] ?></td>
 										<td><?php echo $user['costCenterName'] ?></td>
-										<td><?php echo $user['device_id']['name'] ?></td>
+										<td><?php if(isset($user['device_id']['name'])){echo $user['device_id']['name'] ; }?></td>
 										<td><b><?php echo $user['user_group_id'] ?></b></td>
 										<td><?php echo $user['user_group_name'] ?></td>
 										<td><b><?php
@@ -254,7 +272,9 @@
 									<?php
 									$count++;
 							//	}
-							} ?>
+							}
+							}
+								?>
 
 							</tbody>
 
@@ -275,18 +295,21 @@
 		<?php
 		$count = 0;
 		$sums = array();
-		foreach ($data as $vv) {
-			$v = $vv["costCenterCode"];
-			if (!array_key_exists($v, $sums)) {
-				$sums[$v] = 0;
+		if(isset($data)){
+			foreach ($data as $vv) {
+				$v = $vv["costCenterCode"];
+				if (!array_key_exists($v, $sums)) {
+					$sums[$v] = 0;
+				}
+				$sums[$v]++;
 			}
-			$sums[$v]++;
+			//create array to pass for download pdf
+			$dataPDF = array(
+					'data' => $data,
+					'sums' => $sums
+			);
 		}
-		//create array to pass for download pdf
-		$dataPDF = array(
-				'data' => $data,
-				'sums' => $sums
-		);
+
 		?>
 		<div class="form-group col-md-9">
 			<input type="text" class="form-control col-6" id="data" name="dataDownload"
@@ -318,3 +341,131 @@
 
 <!--  END CONTENT AREA  -->
 <?php $this->load->view('template/footer'); ?>
+<script>
+
+
+
+	var options = {
+		chart: {
+			type: 'line'
+		},
+		series: [{
+			name: 'sales',
+			data: [<?php
+				for($x =0; $x< 5 ; $x++){
+					$total = implode(',', array_slice($sums, 0, 5, true));
+					echo $total;
+				}
+
+				?>]
+		}],
+		xaxis: {
+			categories: [1991,1992,1993,1994,1995,1996,1997, 1998,1999]
+		}
+	}
+
+	var options = {
+		series: [{
+			<?php
+			arsort($sums);
+			$sums =  array_slice(	$sums, 0, 5, true) ;
+			$breakfastCounter = 0;
+			$lunchCounter = 0;
+			$dinnerCounter = 0;
+			$lateNightCounter = 0;
+			$outsideHours =0;
+			foreach($sums as $key => $value){
+				if(isset($data)){
+					foreach ($data as $user) {
+						//	$costCenterName = $user["costCenterName"] ;
+						//do  cost center meal time breakdown
+						if ($user["costCenterCode"] == $key) {
+							$hour = substr($user['datetime'], -12, 2);
+							if ($hour >=$mealTimes[0]->start_hour  && $hour <= $mealTimes[0]->end_hour) {
+								$breakfastCounter++;
+							} elseif ($hour >= $mealTimes[1]->start_hour && $hour <= $mealTimes[1]->end_hour) {
+								$lunchCounter++;
+							} elseif ($hour >= $mealTimes[2]->start_hour && $hour <= $mealTimes[2]->end_hour) {
+								$dinnerCounter++;
+							} elseif ($hour >= $mealTimes[3]->end_hour && $hour <= $mealTimes[3]->end_hour) {
+								$lateNightCounter++;
+							} else {
+								$outsideHours++;
+							}
+
+						}
+
+					}
+				}
+
+
+			?>
+			<?php 	} ?>
+			name: 'Total Meals',
+			data: [<?php echo $breakfastCounter + $lunchCounter + $dinnerCounter + $lateNightCounter + $outsideHours ?>]
+		}, {
+			name: 'Breakfast',
+			data:  [<?php echo $breakfastCounter ?>]
+		}, {
+			name: 'Lunch',
+			data:  [<?php echo $lunchCounter ?>]
+		}, {
+			name: 'Dinner',
+			data:  [<?php echo $dinnerCounter ?>]
+		}, {
+			name: 'LNT',
+			data:  [<?php echo $lateNightCounter ?>]
+		}, {
+			name: 'Outside Hours',
+			data:  [<?php echo $outsideHours ?>]
+		}
+
+
+		],
+		chart: {
+			type: 'bar',
+			height: 350
+		},
+		plotOptions: {
+			bar: {
+				horizontal: false,
+				columnWidth: '55%',
+				endingShape: 'rounded'
+			},
+		},
+		dataLabels: {
+			enabled: false
+		},
+		stroke: {
+			show: true,
+			width: 2,
+			colors: ['transparent']
+		},
+		xaxis: {
+			categories: [<?php foreach($sums as $key=> $value){
+				echo $key;
+			}?>],
+			},
+			yaxis: {
+				title: {
+					text: ' (Meals)'
+				}
+			},
+			fill: {
+				opacity: 1
+			},
+			tooltip: {
+				y: {
+				formatter: function (val) {
+					return "" + val + " Meals"
+				}
+			}
+		}
+	};
+
+	var chart = new ApexCharts(document.querySelector("#chart"), options);
+	chart.render();
+
+
+
+</script>

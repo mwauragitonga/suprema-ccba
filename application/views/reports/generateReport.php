@@ -60,7 +60,7 @@
 												</div>
 												<div class="form-group col-md-4">
 													<label for="inputPassword4">Device</label>
-													<input type="password" class="form-control" id="inputPassword4" placeholder="Embakasi Canteen ">
+													<input type="text" class="form-control" id="inputPassword4" placeholder="Embakasi Canteen ">
 												</div>
 											</div>
 											<div class="form-row mb-4">

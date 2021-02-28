@@ -84,11 +84,32 @@
 		border-top: 1px solid;
 		text-align: center;
 	}
+	.card_main_container{
+		text-align: left;
+		height: 100%;
+		width: 50%;
+		display: inline-block;
+	}
+
+	.card_main_container2 {
+		text-align: right;
+		height: 30%;
+		width: 50%;
+		display: inline-block;
+	}
+
+	.card_main {
+		text-align: left;
+		display: block;
+		padding: 0 1.7rem;
+		width: 100%;
+	}
 </style>
 <div class="details">
 	<div class="details-body">
 		<div class="reportImage" style="float:right" >
 			<img  src="https://www.ccbagroup.com/wp-content/themes/CSI/style/images/logo.png'" height="83px" width="370px" alt=""><br>
+<!--			<img  src="http://www.callmetron.com/assets/banner.jpg" height="112px" width="806px" alt="Mojo Banner"><br>-->
 		</div>
 
 		<div class="reportDetails">
@@ -104,7 +125,7 @@
 			}
 			?>
 			<h4 >Event Log Report Between <b>  <?php echo $startDate ;?> and   <?php echo $endDate ;?></b></h4>
-			<p style="float:right"><b><?php echo "Report Generated on " . date("d/m/Y") ." At ". date("H:i:s"). "<br>"; ?></b></p><br>
+			<p style="float:right"><b><?php echo "Report Generated on " . date("d-m-Y") ." At ". date("H:i:s"). "<br>"; ?></b></p><br>
 
 			<br>
 			<h4 style="margin-left: 35%"><b>Report Summary</b></h4>
