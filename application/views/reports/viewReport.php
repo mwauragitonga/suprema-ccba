@@ -200,7 +200,7 @@
 								<th><b><?php  echo ($sumDinner) ?></b></th>
 								<th><b><?php echo ($sumLNT) ?></b></th>
 								<th><b><?php echo ($sumOutsideHours) ?></b></th>
-								<th><b><?php echo ($total_events) ?></b></th>
+								<th><b><?php if(isset($total_events)){echo ($total_events) ;}?></b></th>
 <!--								<th class="text-center">Action</th>-->
 
 							</tr>
@@ -384,9 +384,8 @@
 						}
 					}
 				}
-				var_dump($bfastValues);
-				var_dump($vals);
-			//	echo implode(',', $bfastValues);
+					$countArray =	array_count_values ( $vals ) ;
+				echo implode(',', $countArray);
 				?>]
 		}, {
 			name: 'Lunch',
@@ -402,17 +401,14 @@
 							if ($user["costCenterCode"] == $key) {
 								$hour = substr($user['datetime'], -12, 2);
 								if ($hour >= $mealTimes[1]->start_hour && $hour <= $mealTimes[1]->end_hour) {
-									$lunchValues= 	$lunchCounter++;
 									$vals[] = $value;
-
 								}
 							}
 						}
 					}
 				}
-				var_dump($lunchValues);
-				var_dump($vals);
-				//echo implode(',', $lunchValues);
+				$countArray =	array_count_values ( $vals ) ;
+				echo implode(',', $countArray);
 				?>]
 		}, {
 			name: 'Dinner',
@@ -420,24 +416,22 @@
 				arsort($sums);
 				$sums =  array_slice(	$sums, 0, 5, true) ;
 				$dinnerValues= array();
-				$vals= array();
+				$vals = array();
 				$dinnerCounter = 0;
 				foreach($sums as $key=> $value) {
 					if (isset($data)) {
 						foreach ($data as $user) {
 							if ($user["costCenterCode"] == $key) {
-								$hour = substr($user['datetime'], -12, 2);
+									$hour = substr($user['datetime'], -12, 2);
 								if ($hour >= $mealTimes[2]->start_hour && $hour <= $mealTimes[2]->end_hour) {
-									$dinnerValues= 	$dinnerCounter++;
 									$vals[] = $value;
 								}
 							}
 						}
 					}
 				}
-				var_dump($dinnerValues);
-				var_dump($vals);
-				//echo implode(',', $dinnerValues);
+			$countArray =	array_count_values ( $vals ) ;
+				echo implode(',', $countArray);
 				?>]
 		}, {
 			name: 'LNT',
@@ -461,9 +455,9 @@
 						}
 					}
 				}
-				var_dump($LNTValues);
-				var_dump($vals);
-				echo implode(',', $LNTValues);
+				$countArray =	array_count_values ( $vals ) ;
+
+				echo implode(',', $countArray);
 				?>]
 		}
 		],

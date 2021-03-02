@@ -220,67 +220,6 @@ foreach($contents['contents'][0] as $vv){
 
 	<?php
 
-			, {
-			name: 'Lunch',
-			data: [<?php
-				$lunchValues= array();
-				$lunchCounter = 0;
-				foreach($sums as $key=> $value) {
-					if (isset($data)) {
-						foreach ($data as $user) {
-							if ($user["costCenterCode"] == $key) {
-								$hour = substr($user['datetime'], -12, 2);
-								if ($hour >= $mealTimes[1]->start_hour && $hour <= $mealTimes[1]->end_hour) {
-									$lunchValues= 	$lunchCounter++;
-								}
-							}
-						}
-					}
-				}
-				var_dump($lunchValues);
-				echo implode(',', $lunchValues);
-				?>]
-	}, {
-		name: 'Dinner',
-				data: [<?php
-			$dinnerValues= array();
-			$dinnerCounter = 0;
-			foreach($sums as $key=> $value) {
-				if (isset($data)) {
-					foreach ($data as $user) {
-						if ($user["costCenterCode"] == $key) {
-							$hour = substr($user['datetime'], -12, 2);
-							if ($hour >= $mealTimes[2]->start_hour && $hour <= $mealTimes[2]->end_hour) {
-								$dinnerValues= 	$dinnerCounter++;
-							}
-						}
-					}
-				}
-			}
-			var_dump($dinnerValues);
-			echo implode(',', $dinnerValues);
-			?>]
-	}, {
-		name: 'LNT',
-				data: [<?php
-			$LNTValues= array();
-			$lateNightCounter = 0;
-			foreach($sums as $key=> $value) {
-				if (isset($data)) {
-					foreach ($data as $user) {
-						if ($user["costCenterCode"] == $key) {
-							$hour = substr($user['datetime'], -12, 2);
-							if ($hour >= $mealTimes[3]->start_hour && $hour <= $mealTimes[3]->end_hour) {
-								$LNTValues=	$lateNightCounter++;
-							}
-						}
-					}
-				}
-			}
-			var_dump($LNTValues);
-			echo implode(',', $LNTValues);
-			?>]
-	}
 	$bfastValues= array();
 	$lunchValues= array();
 	$dinnerValues= array();
