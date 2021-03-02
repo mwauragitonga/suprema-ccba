@@ -25,7 +25,7 @@
 												</div>
 												<div class="form-group col-md-4">
 													<label for="inputPassword4">Date</label>
-													<input id="rangeCalendarFlatpickr" name="date" class="form-control flatpickr flatpickr-input active" type="text" placeholder="Select Date.." required>
+													<input id="rangeCalendarFlatpickr" name="date" class="form-control flatpickr flatpickr-input active" type="text" maxDate ="<?php echo date("Y-m-d") ?>" placeholder="Select Date.." required>
 												</div>
 											</div>
 

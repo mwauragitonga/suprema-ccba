@@ -30,7 +30,7 @@ class Base_controller extends CI_Controller
 		$this->load->view('authentication/login');
 	}
 	public function logout()
-	{
+		{
 		$this->load->view('authentication/login');
 	}
 	public function login()
@@ -114,8 +114,11 @@ class Base_controller extends CI_Controller
 				//ToDO store response body as user session data
 		$body = substr($response, $header_size);
 		curl_close($curl);
-		$sessionID = $head[0]["bs-session-id"];
-		return $sessionID ;
+		if(isset($head[0])){
+			$sessionID = $head[0]["bs-session-id"];
+			return $sessionID ;
+
+		}
 
 	}
 	static function get_headers_from_curl_response($headerContent)
@@ -535,7 +538,7 @@ return $data;
 		$summary =[];
 		$arrayData = [];
 		if(isset($data)){
-			if(isset($data[0])){
+			if(isset($data[0]) && !empty($data[0])){
 
 				for ($x= 0 ; $x< (sizeof($data[0])); $x ++){
 					//	$billingInfo = $this->fetchUserInfo($data[0][$x]['user_id']['user_id']);

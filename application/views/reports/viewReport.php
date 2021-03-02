@@ -30,18 +30,22 @@
 		<?php
 		$count = 0;
 		$sums = array();
-		foreach ($data as $vv) {
-			$v = $vv["costCenterCode"];
-			if (!array_key_exists($v, $sums)) {
-				$sums[$v] = 0;
+		if(isset($data)){
+			foreach ($data as $vv) {
+				$v = $vv["costCenterCode"];
+				if (!array_key_exists($v, $sums)) {
+					$sums[$v] = 0;
+				}
+				$sums[$v]++;
 			}
-			$sums[$v]++;
+			//create array to pass for download pdf
+			$dataPDF = array(
+					'data' => $data,
+					'sums' => $sums
+			);
 		}
-		//create array to pass for download pdf
-		$dataPDF = array(
-				'data' => $data,
-				'sums' => $sums
-		);
+
+
 		?>
 
 		<div class="widget-content widget-content-area ">
@@ -50,7 +54,7 @@
 			</div>
 			<img src="<?php echo base_url(); ?>assets/assets/img/logo.png" class="img-fluid mr-2" alt="avatar"
 				 style="float: right"><br>
-			<h5 style="text-decoration: underline" >Event Log Report Between <b>  <?php echo $startDate ;?> and   <?php echo $endDate ;?></b></h5>
+			<h5 style="text-decoration: underline" >Event Log Report Between <b>  <?php if(isset($startData)){echo $startDate ;} ;?> and   <?php if(isset($endDate)){echo $endDate ;}?></b></h5>
 		<br>
 		 <p style="float:left"><b style="text-decoration: underline"><?php echo "Generated on " . date("d-m-Y") ."  At ". date("H:i:s"). "<br>"; ?></b></p>
 			<br><br><h5 style="text-decoration: underline">Report Summary</h5>
@@ -169,22 +173,25 @@
 							$sumDinner = 0;
 							$sumLNT = 0;
 							$sumOutsideHours = 0;
-							foreach ($data as $user) {
-								//do overall meal time breakdown
-								$hours  = substr($user['datetime'], -12, 2);
-								if ($hours >= $mealTimes[0]->start_hour && $hours <= $mealTimes[0]->end_hour) {
-									$sumBreakfast++;
-								} elseif ($hours >= $mealTimes[1]->start_hour && $hours <= $mealTimes[1]->end_hour) {
-									$sumLunch++;
-								} elseif ($hours >= $mealTimes[2]->start_hour && $hours <= $mealTimes[2]->end_hour) {
-									$sumDinner++;
-								} elseif ($hours >= $mealTimes[3]->start_hour && $hours <= $mealTimes[3]->end_hour) {
-									$sumLNT++;
-								} else {
-									$sumOutsideHours++;
-								}
+							if(isset($data)){
+								foreach ($data as $user) {
+									//do overall meal time breakdown
+									$hours  = substr($user['datetime'], -12, 2);
+									if ($hours >= $mealTimes[0]->start_hour && $hours <= $mealTimes[0]->end_hour) {
+										$sumBreakfast++;
+									} elseif ($hours >= $mealTimes[1]->start_hour && $hours <= $mealTimes[1]->end_hour) {
+										$sumLunch++;
+									} elseif ($hours >= $mealTimes[2]->start_hour && $hours <= $mealTimes[2]->end_hour) {
+										$sumDinner++;
+									} elseif ($hours >= $mealTimes[3]->start_hour && $hours <= $mealTimes[3]->end_hour) {
+										$sumLNT++;
+									} else {
+										$sumOutsideHours++;
+									}
 
-							}?>
+								}
+							}
+						?>
 							<tr>
 								<th class="text-center"></th>
 								<th class="text-center">Total  Meals</th>
@@ -313,11 +320,11 @@
 		?>
 		<div class="form-group col-md-9">
 			<input type="text" class="form-control col-6" id="data" name="dataDownload"
-				   value="<?php echo htmlspecialchars(json_encode($dataPDF)); ?>" hidden>
+				   value="<?php if(isset($dataPDF)){echo htmlspecialchars(json_encode($dataPDF));} ?>" hidden>
 			<input type="text" class="form-control col-6" id="startDate" name="startDate"
-				   value="<?php echo $startDate; ?>" hidden>
+				   value="<?php if(isset($startDate)){echo $startDate;}; ?>" hidden>
 			<input type="text" class="form-control col-6" id="endDate" name="endDate"
-				   value="<?php echo $endDate; ?>" hidden>
+				   value="<?php if(isset($endDate)){echo $endDate; }?>" hidden>
 
 			<button type="submit" class="btn btn-danger  mb-2 mr-2" style="float: right">Download
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -356,9 +363,109 @@
 				}
 				echo implode(',', $values);
 				?>]
+		}, {
+			name: 'Breakfast',
+			data: [<?php
+				arsort($sums);
+				$sums =  array_slice(	$sums, 0, 5, true) ;
+				$bfastValues= array();
+				$vals = array();
+				foreach($sums as $key=> $value) {
+					if (isset($data)) {
+						foreach ($data as $user) {
+							if ($user["costCenterCode"] == $key) {
+
+								$hour = substr($user['datetime'], -12, 2);
+								if ($hour >= $mealTimes[0]->start_hour && $hour <= $mealTimes[0]->end_hour) {
+									$bfastValues[] = $breakfastCounter++;
+									$vals[] = $value;
+								}
+							}
+						}
+					}
+				}
+				var_dump($bfastValues);
+				var_dump($vals);
+			//	echo implode(',', $bfastValues);
+				?>]
+		}, {
+			name: 'Lunch',
+			data: [<?php
+				arsort($sums);
+				$sums =  array_slice(	$sums, 0, 5, true) ;
+				$lunchValues= array();
+				$vals = array();
+				$lunchCounter = 0;
+				foreach($sums as $key=> $value) {
+					if (isset($data)) {
+						foreach ($data as $user) {
+							if ($user["costCenterCode"] == $key) {
+								$hour = substr($user['datetime'], -12, 2);
+								if ($hour >= $mealTimes[1]->start_hour && $hour <= $mealTimes[1]->end_hour) {
+									$lunchValues= 	$lunchCounter++;
+									$vals[] = $value;
+
+								}
+							}
+						}
+					}
+				}
+				var_dump($lunchValues);
+				var_dump($vals);
+				//echo implode(',', $lunchValues);
+				?>]
+		}, {
+			name: 'Dinner',
+			data: [<?php
+				arsort($sums);
+				$sums =  array_slice(	$sums, 0, 5, true) ;
+				$dinnerValues= array();
+				$vals= array();
+				$dinnerCounter = 0;
+				foreach($sums as $key=> $value) {
+					if (isset($data)) {
+						foreach ($data as $user) {
+							if ($user["costCenterCode"] == $key) {
+								$hour = substr($user['datetime'], -12, 2);
+								if ($hour >= $mealTimes[2]->start_hour && $hour <= $mealTimes[2]->end_hour) {
+									$dinnerValues= 	$dinnerCounter++;
+									$vals[] = $value;
+								}
+							}
+						}
+					}
+				}
+				var_dump($dinnerValues);
+				var_dump($vals);
+				//echo implode(',', $dinnerValues);
+				?>]
+		}, {
+			name: 'LNT',
+			data: [<?php
+				arsort($sums);
+				$sums =  array_slice(	$sums, 0, 5, true) ;
+				$LNTValues= array();
+				$vals = array();
+				$lateNightCounter = 0;
+				foreach($sums as $key=> $value) {
+					if (isset($data)) {
+						foreach ($data as $user) {
+							if ($user["costCenterCode"] == $key) {
+								$hour = substr($user['datetime'], -12, 2);
+								if ($hour >= $mealTimes[3]->start_hour && $hour <= $mealTimes[3]->end_hour) {
+									$LNTValues=	$lateNightCounter++;
+									$vals[] = $value;
+
+								}
+							}
+						}
+					}
+				}
+				var_dump($LNTValues);
+				var_dump($vals);
+				echo implode(',', $LNTValues);
+				?>]
 		}
-
-
 		],
 		chart: {
 			type: 'bar',
